@@ -15,10 +15,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var keyartView: UIImageView!
+    @IBOutlet weak var logoLabelView: UILabel!
     @IBOutlet weak var logoView: UIImageView!
     @IBOutlet weak var titleView: UILabel!
     @IBOutlet weak var metadataView: UILabel!
     @IBOutlet weak var loadingbarView: UIImageView!
+    @IBOutlet weak var labelVersion: UILabel!
     
     // dispatch queue
     
@@ -27,6 +29,10 @@ class ViewController: UIViewController {
     var pendingTask: DispatchWorkItem?
     var pendingTask2: DispatchWorkItem?
     var pendingTask3: DispatchWorkItem?
+    
+    // version
+    
+    var version: String?
     
     // player layers
     
@@ -161,7 +167,9 @@ class ViewController: UIViewController {
     var fakeIndex: Int!
     
     var counter = 0
+    var counter2 = 0
     var timer = Timer()
+    var timer2 = Timer()
     
     var logoViewFrameOriginYInitial: CGFloat!
     
@@ -170,7 +178,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        version = "motionA"
+        
         timer = Timer(timeInterval: 1.0, repeats: true) { _ in debugPrint("Done!") }
+        
+        timer2 = Timer(timeInterval: 1.0, repeats: true) { _ in debugPrint("Done!") }
         
         // video
         
@@ -213,20 +225,24 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification , object: nil)
         
         // initial appearance
+        self.labelVersion.text = self.version
+        
+        self.labelVersion.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -4)
+        // self.labelVersion.frame.offsetBy(dx: 0, dy: -40)
+        self.labelVersion.layer.position = CGPoint(x: 80, y: 80)
         
         // loading view
         self.loadingView.alpha = 0.0
-        
-        // fake index
-        self.fakeIndex = 149
-        
         self.keyartView.alpha = 0.0
-        
+        self.logoLabelView.alpha = 0.0
         self.logoView.alpha = 1.0
         self.logoViewFrameOriginYInitial = self.logoView.frame.origin.y
         self.titleView.alpha = 0.0
         self.metadataView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
+        
+        // fake index
+        self.fakeIndex = 149
         
         // fake populate infinite loop
         
@@ -383,16 +399,41 @@ class ViewController: UIViewController {
         debugPrint(counter)
         
         if counter >= 2 {
-            // debugPrint("OK safe to hide")
+            debugPrint("typical safe hide")
             
-            
-            /*
-            UIView.animate(withDuration: 0.1, animations: {
-                self.logoView.alpha = 0.0
-            }, completion: nil)
-            */
- 
             self.doHide()
+        }
+    }
+    
+    // start timer
+    @IBAction func startTimer2(sender: UIPressesEvent) {
+        timer2.invalidate() // just in case this button is tapped multiple times
+        counter2 = 0
+        debugPrint("start!")
+        // start the timer
+        timer2 = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction2), userInfo: nil, repeats: true)
+    }
+    
+    // stop timer
+    @IBAction func cancelTimer2(sender: UIPressesEvent) {
+        timer2.invalidate()
+        counter2 = 0
+        debugPrint("end!")
+        
+        
+    }
+    
+    // called every time interval from the timer
+    @objc func timerAction2() {
+        counter2 += 1
+        debugPrint("counter2 = \(counter2)")
+        
+        if counter2 >= 2 {
+            debugPrint("surfing")
+            self.surfing = true
+
+            
+            self.doScroll(direction: lastDirection)
         }
     }
     
@@ -401,10 +442,15 @@ class ViewController: UIViewController {
         // populate loading view
         
         self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
+        self.logoLabelView.text = String(describing: self.channels[self.fakeIndex])
         self.logoView.image = UIImage(named: String(describing: self.channelLogos[self.fakeIndex]))
         self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
         self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
+        
+        if (version == "motionA") {
+        
+        self.logoLabelView.alpha = 0.0
         self.logoView.alpha = 0.0
         
         self.keyartView.alpha = 0.0
@@ -420,6 +466,8 @@ class ViewController: UIViewController {
             self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
         }
         
+        
+        
         UIView.animate(withDuration: 0.3,
                        delay: 0.0,
                        options: [.curveEaseOut],
@@ -430,6 +478,14 @@ class ViewController: UIViewController {
         }, completion: { (finished: Bool) in
             self.doPopulate()
         })
+            
+        } else {
+            self.loadingView.alpha = 1.0
+            self.logoView.alpha = 1.0
+            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
+            
+            self.doPopulate()
+        }
     }
     
     func doHide() {
@@ -455,8 +511,8 @@ class ViewController: UIViewController {
         self.someInt = Int(self.randomNum!)
         self.someDouble = Double(self.someInt!) / 10
         
-        if (self.someDouble! < 0.5) {
-            self.someDouble! = 0.5
+        if (self.someDouble! < 2.0) {
+            self.someDouble! = 2.0
         }
         
         self.titleView.alpha = 0.0
@@ -464,16 +520,21 @@ class ViewController: UIViewController {
         self.metadataView.alpha = 0.0
         self.keyartView.alpha = 0.0
         
+        // self.loadingbarView.alpha = 1.0
+        // self.loadingbarView.startAnimating()
+        
         UIView.animate(withDuration: 0.3, delay: 1.0, options: [.curveEaseOut], animations: {
             self.titleView.alpha = 1.0
+            self.metadataView.alpha = 1.0
+            self.loadingbarView.alpha = 1.0
         }, completion: nil)
         
-        UIView.animate(withDuration: 0.3, delay: 1.3, options: [.curveEaseOut], animations: {
-            self.metadataView.alpha = 1.0
+        UIView.animate(withDuration: 0.3, delay: 1.0, options: [.curveEaseOut], animations: {
+            
         }, completion: nil)
         
         UIView.animate(withDuration: 0.3, delay: 1.6, options: [.curveEaseOut], animations: {
-            self.loadingbarView.alpha = 1.0
+            
             self.player.isMuted = true
         }, completion: nil)
         
@@ -483,10 +544,53 @@ class ViewController: UIViewController {
     }
     
     func doScroll(direction: String) {
-        doShow(direction: "up")
+        if(direction == "up") {
+            self.fakeIndex = self.fakeIndex + 1
+            doShow(direction: "up")
+         } else if(direction == "down") {
+            self.fakeIndex = self.fakeIndex - 1
+            doShow(direction: "down")
+         }
+    }
+    
+    func doToggleVersion () {
+        if (version == "motionA") {
+            self.version = "simple"
+            
+        } else {
+            self.version = "motionA"
+        }
+        
+        self.labelVersion.text = self.version
+    }
+    
+    func doLogo() {
+        
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        self.cancelTimerButtonTapped(sender: event!)
+        
+        self.startTimer2(sender: event!)
+        
+        
+        if(presses.first?.type == UIPress.PressType.upArrow) {
+            debugPrint("up arrow began")
+            self.fakeIndex = self.fakeIndex + 1
+            debugPrint(self.fakeIndex)
+            self.lastDirection = "up"
+            self.doShow(direction: "up")
+        } else if(presses.first?.type == UIPress.PressType.downArrow) {
+            debugPrint("down arrow began")
+            self.fakeIndex = self.fakeIndex - 1
+            debugPrint(self.fakeIndex)
+            self.lastDirection = "down"
+            self.doShow(direction: "down")
+        } else if(presses.first?.type == UIPress.PressType.leftArrow) {
+            doToggleVersion()
+        }
+        
+        /*
         self.cancelTimerButtonTapped(sender: event!)
         
         // reset
@@ -507,23 +611,36 @@ class ViewController: UIViewController {
             self.lastDirection = "down"
             self.doShow(direction: "down")
         }
+         */
     }
     
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        self.startTimerButtonTapped(sender: event!)
-        /*
-        self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
-        UIView.animate(withDuration: 0.1, animations: {
-            
-            self.logoView.alpha = 0.0
-        }, completion: nil)
-        */
         
-        if(presses.first!.type == UIPress.PressType.upArrow) {
+        self.startTimerButtonTapped(sender: event!)
+        
+        self.cancelTimer2(sender: event!)
+        
+        self.surfing = false
+        
+        // reset
+        
+        // self.loadingbarView.alpha = 0.0
+        
+        /*
+        if(presses.first?.type == UIPress.PressType.upArrow) {
             debugPrint("up arrow ended")
-        } else if(presses.first!.type == UIPress.PressType.downArrow) {
+            self.fakeIndex = self.fakeIndex + 1
+            debugPrint(self.fakeIndex)
+            self.lastDirection = "up"
+            self.doShow(direction: "up")
+        } else if(presses.first?.type == UIPress.PressType.downArrow) {
             debugPrint("down arrow ended")
+            self.fakeIndex = self.fakeIndex - 1
+            debugPrint(self.fakeIndex)
+            self.lastDirection = "down"
+            self.doShow(direction: "down")
         }
+        */
     }
 }
 
