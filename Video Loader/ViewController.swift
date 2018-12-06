@@ -102,6 +102,7 @@ class ViewController: UIViewController {
     var someDouble: Double?
     var randomTime: TimeInterval?
     var someCMTime: CMTime?
+    var randomDouble: Double?
     
     // loading bar
     
@@ -173,7 +174,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        version = "motionA"
+        self.version = "motionA"
+        
+        self.lastDirection = "up"
 
         // video
         
@@ -208,7 +211,6 @@ class ViewController: UIViewController {
         self.player.isMuted = false
 
         self.player.play()
-        
         
         self.videoView.layer.addSublayer(playerLayer!)
         
@@ -372,7 +374,7 @@ class ViewController: UIViewController {
             self.doHide()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(2000), execute: self.pendingTask2!)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(limit: 2.0)*1000)), execute: self.pendingTask2!)
     }
     
     func doInvalidateTimer() {
@@ -380,6 +382,19 @@ class ViewController: UIViewController {
         pendingTask2?.cancel()
         
         self.doShow(direction: self.lastDirection)
+    }
+    
+    func getRandomDouble(limit: Double) -> Double {
+        // emulate loading
+        self.randomNum = arc4random_uniform(15) // range
+        self.someInt = Int(self.randomNum!)
+        self.someDouble = Double(self.someInt!) / 10
+        
+        if (self.someDouble! >= limit) {
+            self.someDouble! = limit
+        }
+        
+        return self.someDouble!
     }
     
     func doShow(direction: String) {
@@ -411,8 +426,6 @@ class ViewController: UIViewController {
                 self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
             }
             
-            
-            
             UIView.animate(withDuration: 0.3,
                            delay: 0.0,
                            options: [.curveEaseOut],
@@ -435,36 +448,16 @@ class ViewController: UIViewController {
         
         DispatchQueue.main.async(execute: self.pendingTask!)
     }
-    
+
     func doHide() {
-    
-        // emulate loading
-        self.randomNum = arc4random_uniform(15) // range
-        self.someInt = Int(self.randomNum!)
-        self.someDouble = Double(self.someInt!) / 10
-        
-        if (self.someDouble! < 2.0) {
-            self.someDouble! = 2.0
-        }
-        
-        UIView.animate(withDuration: 0.3, delay: self.someDouble!, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.loadingView.alpha = 0.0
-            
             self.player.isMuted = false
         }, completion: nil)
     
     }
     
     func doPopulate() {
-        // emulate loading
-        self.randomNum = arc4random_uniform(15) // range
-        self.someInt = Int(self.randomNum!)
-        self.someDouble = Double(self.someInt!) / 10
-        
-        if (self.someDouble! < 2.0) {
-            self.someDouble! = 2.0
-        }
-        
         self.titleView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
         self.metadataView.alpha = 0.0
@@ -488,7 +481,7 @@ class ViewController: UIViewController {
             self.player.isMuted = true
         }, completion: nil)
         
-        UIView.animate(withDuration: 0.3, delay: self.someDouble!, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(limit: 2.0), options: [.curveEaseOut], animations: {
             self.keyartView.alpha = 1.0
         }, completion: nil)
     }
