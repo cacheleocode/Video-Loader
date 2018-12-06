@@ -166,11 +166,6 @@ class ViewController: UIViewController {
     
     var fakeIndex: Int!
     
-    var counter = 0
-    var counter2 = 0
-    var timer = Timer()
-    var timer2 = Timer()
-    
     var logoViewFrameOriginYInitial: CGFloat!
     
     var lastDirection: String!
@@ -179,11 +174,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
        
         version = "motionA"
-        
-        timer = Timer(timeInterval: 1.0, repeats: true) { _ in debugPrint("Done!") }
-        
-        timer2 = Timer(timeInterval: 1.0, repeats: true) { _ in debugPrint("Done!") }
-        
+
         // video
         
         playerLayer = AVPlayerLayer(player: self.player)
@@ -375,120 +366,78 @@ class ViewController: UIViewController {
         playerLayer?.player?.play()
      }
     
-    // start timer
-    @IBAction func startTimerButtonTapped(sender: UIPressesEvent) {
-        timer.invalidate() // just in case this button is tapped multiple times
-        counter = 0
-        debugPrint("start!")
-        // start the timer
-        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
-    }
-    
-    // stop timer
-    @IBAction func cancelTimerButtonTapped(sender: UIPressesEvent) {
-        timer.invalidate()
-        counter = 0
-        debugPrint("end!")
-        
-        
-    }
-    
-    // called every time interval from the timer
-    @objc func timerAction() {
-        counter += 1
-        debugPrint(counter)
-        
-        if counter >= 2 {
-            debugPrint("typical safe hide")
-            
+    func doRestartTimer() {
+        debugPrint("doRestartTimer")
+        pendingTask2 = DispatchWorkItem {
             self.doHide()
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(2000), execute: self.pendingTask2!)
     }
     
-    // start timer
-    @IBAction func startTimer2(sender: UIPressesEvent) {
-        timer2.invalidate() // just in case this button is tapped multiple times
-        counter2 = 0
-        debugPrint("start!")
-        // start the timer
-        timer2 = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction2), userInfo: nil, repeats: true)
-    }
-    
-    // stop timer
-    @IBAction func cancelTimer2(sender: UIPressesEvent) {
-        timer2.invalidate()
-        counter2 = 0
-        debugPrint("end!")
+    func doInvalidateTimer() {
+        debugPrint("doInvalidateTimer")
+        pendingTask2?.cancel()
         
-        
-    }
-    
-    // called every time interval from the timer
-    @objc func timerAction2() {
-        counter2 += 1
-        debugPrint("counter2 = \(counter2)")
-        
-        if counter2 >= 2 {
-            debugPrint("surfing")
-            self.surfing = true
-
-            
-            self.doScroll(direction: lastDirection)
-        }
+        self.doShow(direction: self.lastDirection)
     }
     
     func doShow(direction: String) {
-        
-        // populate loading view
-        
-        self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
-        self.logoLabelView.text = String(describing: self.channels[self.fakeIndex])
-        self.logoView.image = UIImage(named: String(describing: self.channelLogos[self.fakeIndex]))
-        self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
-        self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
-        
-        
-        if (version == "motionA") {
-        
-        self.logoLabelView.alpha = 0.0
-        self.logoView.alpha = 0.0
-        
-        self.keyartView.alpha = 0.0
-        self.titleView.alpha = 0.0
-        self.loadingbarView.alpha = 0.0
-        self.metadataView.alpha = 0.0
-        
-        
-        if (direction == "up") {
-            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial - 80
-        }
-        else if (direction == "down") {
-            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
-        }
-        
-        
-        
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.0,
-                       options: [.curveEaseOut],
-                       animations: {
-            self.loadingView.alpha = 1.0
-            self.logoView.alpha = 1.0
-            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
-        }, completion: { (finished: Bool) in
-            self.doPopulate()
-        })
+        pendingTask = DispatchWorkItem {
+            // populate loading view
             
-        } else {
-            self.loadingView.alpha = 1.0
-            self.logoView.alpha = 1.0
-            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
+            self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
+            self.logoLabelView.text = String(describing: self.channels[self.fakeIndex])
+            self.logoView.image = UIImage(named: String(describing: self.channelLogos[self.fakeIndex]))
+            self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
+            self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
             
-            self.doPopulate()
+            
+            if (self.version == "motionA") {
+            
+            self.logoLabelView.alpha = 0.0
+            self.logoView.alpha = 0.0
+            
+            self.keyartView.alpha = 0.0
+            self.titleView.alpha = 0.0
+            self.loadingbarView.alpha = 0.0
+            self.metadataView.alpha = 0.0
+            
+            
+            if (direction == "up") {
+                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial - 80
+            }
+            else if (direction == "down") {
+                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
+            }
+            
+            
+            
+            UIView.animate(withDuration: 0.3,
+                           delay: 0.0,
+                           options: [.curveEaseOut],
+                           animations: {
+                self.loadingView.alpha = 1.0
+                self.logoView.alpha = 1.0
+                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
+            }, completion: { (finished: Bool) in
+                self.doPopulate()
+            })
+                
+            } else {
+                self.loadingView.alpha = 1.0
+                self.logoView.alpha = 1.0
+                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
+                
+                self.doPopulate()
+            }
         }
+        
+        DispatchQueue.main.async(execute: self.pendingTask!)
     }
     
     func doHide() {
+    
         // emulate loading
         self.randomNum = arc4random_uniform(15) // range
         self.someInt = Int(self.randomNum!)
@@ -498,11 +447,12 @@ class ViewController: UIViewController {
             self.someDouble! = 2.0
         }
         
-        UIView.animate(withDuration: 0.3, delay: someDouble!, animations: {
+        UIView.animate(withDuration: 0.3, delay: self.someDouble!, animations: {
             self.loadingView.alpha = 0.0
             
             self.player.isMuted = false
         }, completion: nil)
+    
     }
     
     func doPopulate() {
@@ -567,11 +517,33 @@ class ViewController: UIViewController {
     func doLogo() {
         
     }
-
+    
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        self.cancelTimerButtonTapped(sender: event!)
+        if(presses.first?.type == UIPress.PressType.upArrow) {
+            debugPrint("up arrow began")
+            self.fakeIndex = self.fakeIndex + 1
+            self.lastDirection = "up"
+        } else if(presses.first?.type == UIPress.PressType.downArrow) {
+            debugPrint("down arrow began")
+            self.fakeIndex = self.fakeIndex - 1
+            self.lastDirection = "down"
+        } else if(presses.first?.type == UIPress.PressType.leftArrow) {
+            doToggleVersion()
+        }
         
-        self.startTimer2(sender: event!)
+        // Presses in progress - !ended, !cancelled, just invalidate it
+        print("Invalidate auto lock timer")
+        self.doInvalidateTimer()
+    }
+    
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        // Presses ended || cancelled, restart timer
+        print("Restart auto lock timer")
+        self.doRestartTimer()
+    }
+    
+/*
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         
         
         if(presses.first?.type == UIPress.PressType.upArrow) {
@@ -589,58 +561,11 @@ class ViewController: UIViewController {
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
             doToggleVersion()
         }
-        
-        /*
-        self.cancelTimerButtonTapped(sender: event!)
-        
-        // reset
-        
-        self.loadingbarView.alpha = 0.0
-        
-        
-        if(presses.first?.type == UIPress.PressType.upArrow) {
-            debugPrint("up arrow began")
-            self.fakeIndex = self.fakeIndex + 1
-            debugPrint(self.fakeIndex)
-            self.lastDirection = "up"
-            self.doShow(direction: "up")
-        } else if(presses.first?.type == UIPress.PressType.downArrow) {
-            debugPrint("down arrow began")
-            self.fakeIndex = self.fakeIndex - 1
-            debugPrint(self.fakeIndex)
-            self.lastDirection = "down"
-            self.doShow(direction: "down")
-        }
-         */
     }
-    
+ 
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        
-        self.startTimerButtonTapped(sender: event!)
-        
-        self.cancelTimer2(sender: event!)
-        
         self.surfing = false
-        
-        // reset
-        
-        // self.loadingbarView.alpha = 0.0
-        
-        /*
-        if(presses.first?.type == UIPress.PressType.upArrow) {
-            debugPrint("up arrow ended")
-            self.fakeIndex = self.fakeIndex + 1
-            debugPrint(self.fakeIndex)
-            self.lastDirection = "up"
-            self.doShow(direction: "up")
-        } else if(presses.first?.type == UIPress.PressType.downArrow) {
-            debugPrint("down arrow ended")
-            self.fakeIndex = self.fakeIndex - 1
-            debugPrint(self.fakeIndex)
-            self.lastDirection = "down"
-            self.doShow(direction: "down")
-        }
-        */
     }
+ */
 }
 
