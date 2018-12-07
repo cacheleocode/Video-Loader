@@ -171,6 +171,14 @@ class ViewController: UIViewController {
     
     var lastDirection: String!
     
+    // timer
+    
+    var timeAtPress: NSDate!
+    var timeElapsed: NSDate!
+    
+    var counter = 0
+    var timer = Timer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -192,6 +200,8 @@ class ViewController: UIViewController {
             }
         })
         
+        
+        
         /*
         // random time
         self.randomNum = arc4random_uniform(15) // range
@@ -210,12 +220,17 @@ class ViewController: UIViewController {
         
         self.player.isMuted = false
 
+        
+    
+        // self.player.seek(to: self.someCMTime!)
         self.player.play()
         
         self.videoView.layer.addSublayer(playerLayer!)
         
         // resume playback upon app focus
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification , object: nil)
+        
+        // timer
         
         // initial appearance
         self.labelVersion.text = self.version
@@ -368,6 +383,35 @@ class ViewController: UIViewController {
         playerLayer?.player?.play()
      }
     
+    // start timer
+    @IBAction func timerStart(sender: UIPressesEvent) {
+        timer.invalidate() // just in case this button is tapped multiple times
+        counter = 0
+        debugPrint("start!")
+        // start the timer
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+    }
+    
+    // stop timer
+    @IBAction func timerCancel(sender: UIPressesEvent) {
+        timer.invalidate()
+        counter = 0
+        debugPrint("end!")
+    }
+    
+    // called every time interval from the timer
+    @objc func timerAction() {
+        counter += 1
+        debugPrint(counter)
+        
+        if counter >= 3 {
+            debugPrint("typical safe hide")
+            
+            self.doSurfing(direction: self.lastDirection)
+            
+        }
+    }
+    
     func doRestartTimer() {
         debugPrint("doRestartTimer")
         pendingTask2 = DispatchWorkItem {
@@ -381,7 +425,11 @@ class ViewController: UIViewController {
         debugPrint("doInvalidateTimer")
         pendingTask2?.cancel()
         
-        self.doShow(direction: self.lastDirection)
+        pendingTask = DispatchWorkItem {
+            self.doShow(direction: self.lastDirection)
+        }
+        
+        DispatchQueue.main.async(execute: self.pendingTask!)
     }
     
     func getRandomDouble(limit: Double) -> Double {
@@ -398,7 +446,19 @@ class ViewController: UIViewController {
     }
     
     func doShow(direction: String) {
-        pendingTask = DispatchWorkItem {
+        
+            /*
+            print("duration in seconds = \(self.player.currentItem!.asset.duration.seconds)")
+            // print("timescale = \(self.player.currentItem!.asset.duration.timescale)")
+            
+            self.someCMTime = self.player.currentItem!.asset.duration
+            
+            self.someCMTime = CMTimeMakeWithSeconds(self.getRandomDouble(limit: self.player.currentItem!.asset.duration.seconds), preferredTimescale: self.player.currentItem!.asset.duration.timescale)
+            // self.someCMTime = CMTime(seconds: self.getRandomDouble(limit: self.player.currentItem!.asset.duration.seconds), preferredTimescale: self.player.currentItem!.asset.duration.timescale)
+            
+            print("random time = \(Double((self.someCMTime?.seconds)!))")
+            */
+            
             // populate loading view
             
             self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
@@ -444,9 +504,9 @@ class ViewController: UIViewController {
                 
                 self.doPopulate()
             }
-        }
         
-        DispatchQueue.main.async(execute: self.pendingTask!)
+        
+        
     }
 
     func doHide() {
@@ -466,34 +526,27 @@ class ViewController: UIViewController {
         // self.loadingbarView.alpha = 1.0
         // self.loadingbarView.startAnimating()
         
-        UIView.animate(withDuration: 0.3, delay: 1.0, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.3, options: [.curveEaseOut], animations: {
             self.titleView.alpha = 1.0
             self.metadataView.alpha = 1.0
             self.loadingbarView.alpha = 1.0
-        }, completion: nil)
-        
-        UIView.animate(withDuration: 0.3, delay: 1.0, options: [.curveEaseOut], animations: {
-            
-        }, completion: nil)
-        
-        UIView.animate(withDuration: 0.3, delay: 1.6, options: [.curveEaseOut], animations: {
-            
+        }, completion: { (finished: Bool) in
             self.player.isMuted = true
-        }, completion: nil)
+        })
         
         UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(limit: 2.0), options: [.curveEaseOut], animations: {
             self.keyartView.alpha = 1.0
         }, completion: nil)
     }
     
-    func doScroll(direction: String) {
+    func doSurfing(direction: String) {
         if(direction == "up") {
             self.fakeIndex = self.fakeIndex + 1
             doShow(direction: "up")
-         } else if(direction == "down") {
+        } else if(direction == "down") {
             self.fakeIndex = self.fakeIndex - 1
             doShow(direction: "down")
-         }
+        }
     }
     
     func doToggleVersion () {
@@ -512,6 +565,14 @@ class ViewController: UIViewController {
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        self.timeAtPress = NSDate()
+        print("timeAtPress \(self.timeAtPress as Date)")
+        
+        
+        
+        
+        // Date().timeIntervalSince(presses.first?.timestamp)
+        
         if(presses.first?.type == UIPress.PressType.upArrow) {
             debugPrint("up arrow began")
             self.fakeIndex = self.fakeIndex + 1
@@ -522,17 +583,29 @@ class ViewController: UIViewController {
             self.lastDirection = "down"
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
             doToggleVersion()
+        } else if(presses.first?.type == UIPress.PressType.rightArrow) {
+            doToggleVersion()
         }
         
         // Presses in progress - !ended, !cancelled, just invalidate it
         print("Invalidate auto lock timer")
+
         self.doInvalidateTimer()
+        
+        // surfing timer
+        self.timerStart(sender: event!)
     }
     
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        self.timeElapsed = NSDate()
+        print("timeElapsed \(Date().timeIntervalSince(self.timeAtPress as Date))")
+        
         // Presses ended || cancelled, restart timer
         print("Restart auto lock timer")
         self.doRestartTimer()
+        
+        // surfing timer
+        self.timerCancel(sender: event!)
     }
     
 /*
