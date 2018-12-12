@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D28F5CA21B8F6E800F9FEDC /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D28F5C921B8F6E800F9FEDC /* UIApplication.swift */; };
 		8D90241A21AF334900ADF066 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D90241921AF334900ADF066 /* AppDelegate.swift */; };
 		8D90241C21AF334900ADF066 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D90241B21AF334900ADF066 /* ViewController.swift */; };
 		8D90241F21AF334900ADF066 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D90241D21AF334900ADF066 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D28F5C921B8F6E800F9FEDC /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		8D90241621AF334900ADF066 /* Video Loader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Loader.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D90241921AF334900ADF066 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8D90241B21AF334900ADF066 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				8D90241921AF334900ADF066 /* AppDelegate.swift */,
+				8D28F5C921B8F6E800F9FEDC /* UIApplication.swift */,
 				8D90241B21AF334900ADF066 /* ViewController.swift */,
 				8D90241D21AF334900ADF066 /* Main.storyboard */,
 				8D90242021AF334B00ADF066 /* Assets.xcassets */,
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D28F5CA21B8F6E800F9FEDC /* UIApplication.swift in Sources */,
 				8D90241C21AF334900ADF066 /* ViewController.swift in Sources */,
 				8D90241A21AF334900ADF066 /* AppDelegate.swift in Sources */,
 			);
@@ -430,7 +434,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mopro.Video-Loader2";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mopro.Video-Loader-4";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -449,7 +453,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mopro.Video-Loader2";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mopro.Video-Loader-4";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 3;
