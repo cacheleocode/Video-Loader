@@ -31,12 +31,12 @@ class ViewController: UIViewController {
     // content
     
     let channelArrays = Array(repeating: [
-        "amc",
-        "cbs",
-        "cnn",
-        "csn",
-        "espn",
-        "fox"
+        "AMC",
+        "CBS",
+        "CNN",
+        "CSN",
+        "ESPN",
+        "FOX"
         ], count: 50)
     
     let channelKeyartArrays = Array(repeating: [
@@ -157,6 +157,8 @@ class ViewController: UIViewController {
     
     var fakeIndex: Int!
     
+    var callsignViewFrameOriginYInitial: CGFloat!
+    
     var logoViewFrameOriginYInitial: CGFloat!
     
     var lastDirection: String!
@@ -201,13 +203,14 @@ class ViewController: UIViewController {
         
         self.versionView.text = self.version
         self.versionView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -4)
-        self.versionView.layer.position = CGPoint(x: 200, y: 200)
+        self.versionView.layer.position = CGPoint(x: 150, y: 150)
         
         // loading view
         
         self.loadingView.alpha = 0.0
         self.keyartView.alpha = 0.0
         self.callsignView.alpha = 0.0
+        self.callsignViewFrameOriginYInitial = self.callsignView.frame.origin.y
         self.logoView.alpha = 1.0
         self.logoViewFrameOriginYInitial = self.logoView.frame.origin.y
         self.titleView.alpha = 0.0
@@ -340,7 +343,20 @@ class ViewController: UIViewController {
         animatedImage = UIImage.animatedImage(with: images, duration: 1.3)
         loadingbarView.image = animatedImage
         loadingbarView.layer.cornerRadius = 10
+        
+        /*
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        self.becomeFirstResponder()
+        debugPrint("isFirstResponder: \(self.isFirstResponder)")
+        */
     }
+    
+    /*
+    override func becomeFirstResponder() -> Bool {
+        self.becomeFirstResponder()
+        return true
+    }
+    */
     
     @objc func appWillEnterForegroundNotification() {
         playerLayer?.isHidden = false
@@ -415,6 +431,9 @@ class ViewController: UIViewController {
     }
     
     func doShow(direction: String) {
+        self.randomDouble = self.getRandomDouble(lower: 0, upper: 4)
+        debugPrint("logooooooo mess: \(String(describing: self.randomDouble))")
+        
         // populate loading view
         
         self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
@@ -425,37 +444,57 @@ class ViewController: UIViewController {
         
         if (self.version == "motionA") {
             self.callsignView.alpha = 0.0
-            self.logoView.alpha = 0.0
+            
+            // self.logoView.alpha = 0.0
+            
             self.keyartView.alpha = 0.0
+            
             self.titleView.alpha = 0.0
             self.loadingbarView.alpha = 0.0
             self.metadataView.alpha = 0.0
             
             if (direction == "up") {
+                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial - 80
                 self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial - 80
             }
             else if (direction == "down") {
+                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial + 80
                 self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
             }
             
             UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.loadingView.alpha = 1.0
-                self.logoView.alpha = 1.0
+                
+                if (self.randomDouble == 0.0) {
+                    self.callsignView.alpha = 1.0
+                    self.logoView.alpha = 0.0
+                } else {
+                    self.callsignView.alpha = 0.0
+                    self.logoView.alpha = 1.0
+                }
+                
+                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial
                 self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
             }, completion: { (finished: Bool) in
                 self.doPopulate()
             })
         } else { // basic
             self.loadingView.alpha = 1.0
-            self.logoView.alpha = 0.0
-            self.callsignView.alpha = 1.0
-            // self.logoView.alpha = 1.0
+            self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial
             self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
             
-            UIView.animate(withDuration: 0.1, delay: self.getRandomDouble(lower: 0, upper: 300), options: [.curveEaseOut], animations: {
+            if (self.randomDouble == 0.0) {
+                self.callsignView.alpha = 1.0
+                self.logoView.alpha = 0.0
+                
+                UIView.animate(withDuration: 0.1, delay: 0.0, options: [.curveEaseOut], animations: {
+                    self.callsignView.alpha = 0.0
+                    self.logoView.alpha = 1.0
+                }, completion: nil)
+            } else {
                 self.callsignView.alpha = 0.0
                 self.logoView.alpha = 1.0
-            }, completion: nil)
+            }
             
             self.doPopulate()
         }
@@ -513,6 +552,11 @@ class ViewController: UIViewController {
     
     func doLogo() {
         
+    }
+    
+    
+    override func remoteControlReceived(with event: UIEvent?) {
+        // what
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
