@@ -27,59 +27,19 @@ class ViewController: UIViewController {
     // player layer
     
     var playerLayer: AVPlayerLayer?
+    var playerLayer2: AVPlayerLayer?
     
     // content
     
-    let channelArrays = Array(repeating: [
-        "AMC",
-        "CBS",
-        "CNN",
-        "CSN",
-        "ESPN",
-        "FOX"
-        ], count: 50)
+    let channels = ["CBS", "ESPN"]
     
-    let channelKeyartArrays = Array(repeating: [
-        "keyart_amc",
-        "keyart_cbs",
-        "keyart_cnn",
-        "keyart_csn",
-        "keyart_espn",
-        "keyart_fox"
-        ], count: 50)
+    let channelKeyarts = ["keyart_cbs", "keyart_espn"]
     
-    let channelLogoArrays = Array(repeating: [
-        "logo_amc",
-        "logo_cbs",
-        "logo_cnn",
-        "logo_csn",
-        "logo_espn",
-        "logo_fox"
-        ], count: 50)
+    let channelLogos = ["logo_cbs", "logo_espn"]
     
-    var channelTitleArrays = Array(repeating: [
-        "The Walking Dead",
-        "The Talk",
-        "State of the Union",
-        "MIL vs SAC",
-        "UCLA vs AZW",
-        "Empire"
-        ], count: 50)
+    var channelTitles = ["The Talk", "UCLA vs AZW"]
     
-    var channelMetadataArrays = Array(repeating: [
-        "S2 E7 | The Other Side",
-        "S7 EP182 | Actress Salma Hayek",
-        "S77 E2 | Gary Johnson",
-        "2017",
-        "2017",
-        "S2 E3 | Bout that"
-        ], count: 50)
-    
-    var channels = [String]()
-    var channelKeyarts = [String]()
-    var channelLogos = [String]()
-    var channelTitles = [String]()
-    var channelMetadatas = [String]()
+    var channelMetadatas = ["S7 EP182 | Actress Salma Hayek", "2017"]
     
     // mode
     
@@ -148,6 +108,7 @@ class ViewController: UIViewController {
     // actual player
     
     var player = AVPlayer(url: URL(fileURLWithPath: Bundle.main.path(forResource: "commercials", ofType:"mp4")!))
+    var player2 = AVPlayer(url: URL(fileURLWithPath: Bundle.main.path(forResource: "game", ofType:"mp4")!))
     
     // current channel
     
@@ -160,6 +121,10 @@ class ViewController: UIViewController {
     var callsignViewFrameOriginYInitial: CGFloat!
     
     var logoViewFrameOriginYInitial: CGFloat!
+    
+    var callsignViewFrameOriginXInitial: CGFloat!
+    
+    var logoViewFrameOriginXInitial: CGFloat!
     
     var lastDirection: String!
     
@@ -196,6 +161,26 @@ class ViewController: UIViewController {
         
         self.videoView.layer.addSublayer(playerLayer!)
         
+        
+        playerLayer2 = AVPlayerLayer(player: self.player2)
+        playerLayer2?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        playerLayer2!.frame = self.videoView.frame
+        playerLayer2?.isHidden = true
+        
+        // loop video
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player2.currentItem, queue: nil, using: { (_) in
+            DispatchQueue.main.async {
+                self.player2.seek(to: CMTime.zero)
+                self.player2.play()
+            }
+        })
+        
+        self.player2.isMuted = true
+        
+        self.player2.play()
+        
+        self.videoView.layer.addSublayer(playerLayer2!)
+        
         // resume playback upon app focus
         NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification , object: nil)
         
@@ -211,36 +196,17 @@ class ViewController: UIViewController {
         self.keyartView.alpha = 0.0
         self.callsignView.alpha = 0.0
         self.callsignViewFrameOriginYInitial = self.callsignView.frame.origin.y
+        self.callsignViewFrameOriginXInitial = self.callsignView.frame.origin.x
         self.logoView.alpha = 1.0
         self.logoViewFrameOriginYInitial = self.logoView.frame.origin.y
+        self.logoViewFrameOriginXInitial = self.logoView.frame.origin.x
         self.titleView.alpha = 0.0
         self.metadataView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
         
         // fake index
-        self.fakeIndex = 149
-        
-        // fake populate infinite loop
-        
-        for array in channelArrays {
-            channels += array
-        }
-        
-        for array in channelKeyartArrays {
-            channelKeyarts += array
-        }
-        
-        for array in channelLogoArrays {
-            channelLogos += array
-        }
-        
-        for array in channelTitleArrays {
-            channelTitles += array
-        }
-        
-        for array in channelMetadataArrays {
-            channelMetadatas += array
-        }
+        self.fakeIndex = 0
+   
         
         // loading bar
         
@@ -385,10 +351,7 @@ class ViewController: UIViewController {
     @objc func timerAction() {
         counter += 1
         debugPrint(counter)
-        
-        if counter >= 3 {
-            self.doSurfing(direction: self.lastDirection)
-        }
+
     }
     
     func doRestartTimer() {
@@ -403,7 +366,7 @@ class ViewController: UIViewController {
         pendingTask2?.cancel()
         
         pendingTask = DispatchWorkItem {
-            self.doShow(direction: self.lastDirection)
+            
         }
         
         DispatchQueue.main.async(execute: self.pendingTask!)
@@ -430,9 +393,10 @@ class ViewController: UIViewController {
         return self.someDouble!
     }
     
-    func doShow(direction: String) {
+    func doShow(direction: String, index: Int) {
         self.randomDouble = self.getRandomDouble(lower: 0, upper: 4)
         debugPrint("logooooooo mess: \(String(describing: self.randomDouble))")
+        
         
         // populate loading view
         
@@ -453,15 +417,6 @@ class ViewController: UIViewController {
             self.loadingbarView.alpha = 0.0
             self.metadataView.alpha = 0.0
             
-            if (direction == "up") {
-                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial - 80
-                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial - 80
-            }
-            else if (direction == "down") {
-                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial + 80
-                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial + 80
-            }
-            
             UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.loadingView.alpha = 1.0
                 
@@ -472,11 +427,22 @@ class ViewController: UIViewController {
                     self.callsignView.alpha = 0.0
                     self.logoView.alpha = 1.0
                 }
-                
-                self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial
-                self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
             }, completion: { (finished: Bool) in
                 self.doPopulate()
+                
+                if (index == 0) {
+                    self.playerLayer?.player?.isMuted = false
+                    self.playerLayer?.isHidden = false
+                    
+                    self.playerLayer2?.player?.isMuted = true
+                    self.playerLayer2?.isHidden = true
+                } else {
+                    self.playerLayer?.player?.isMuted = true
+                    self.playerLayer?.isHidden = true
+                    
+                    self.playerLayer2?.player?.isMuted = false
+                    self.playerLayer2?.isHidden = false
+                }
             })
         } else { // basic
             self.loadingView.alpha = 1.0
@@ -529,16 +495,7 @@ class ViewController: UIViewController {
         }, completion: nil)
     }
     
-    func doSurfing(direction: String) {
-        if(direction == "up") {
-            self.fakeIndex = self.fakeIndex + 1
-            doShow(direction: "up")
-        } else if(direction == "down") {
-            self.fakeIndex = self.fakeIndex - 1
-            doShow(direction: "down")
-        }
-    }
-    
+
     func doToggleVersion () {
         if (version == "motionA") {
             self.version = "simple"
@@ -553,7 +510,7 @@ class ViewController: UIViewController {
     func doLogo() {
         
     }
-    
+
     
     override func remoteControlReceived(with event: UIEvent?) {
         // what
@@ -563,26 +520,32 @@ class ViewController: UIViewController {
         if(presses.first?.type == UIPress.PressType.upArrow) {
             // debugPrint("up arrow began")
             
-            self.fakeIndex = self.fakeIndex + 1
-            
             self.lastDirection = "up"
         } else if(presses.first?.type == UIPress.PressType.downArrow) {
             // debugPrint("down arrow began")
             
-            self.fakeIndex = self.fakeIndex - 1
-            
             self.lastDirection = "down"
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
-            doToggleVersion()
+            self.lastDirection = "left"
+            
+            debugPrint("fake index: \(String(describing: self.fakeIndex))")
+            
+            if (self.fakeIndex == 0) {
+                self.fakeIndex = 1
+            } else {
+                self.fakeIndex = 0
+            }
+            
+            doShow(direction: "left", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.rightArrow) {
-            doToggleVersion()
+            self.lastDirection = "right"
         }
         
         // Presses in progress - !ended, !cancelled, just invalidate it
-        self.doInvalidateTimer()
+        // self.doInvalidateTimer()
         
         // surfing timer
-        self.timerStart(sender: event!)
+        // self.timerStart(sender: event!)
     }
     
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
