@@ -14,16 +14,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var loadingbarView: UIImageView!
     @IBOutlet weak var versionView: UILabel!
     @IBOutlet weak var tipView: UIView!
+    @IBOutlet weak var tipGradientView: UIImageView!
     @IBOutlet weak var tipMessageView: UILabel!
     @IBOutlet weak var tipImageView: UIImageView!
     
     @IBOutlet weak var loading2View: UIView!
+    @IBOutlet weak var loading2GradientView: UIImageView!
+    @IBOutlet weak var loading2MessageView: UILabel!
     
     // dispatch queue
     
     let queue = DispatchQueue(label: "queue", attributes: .concurrent)
     var pendingTask: DispatchWorkItem?
     var pendingTask2: DispatchWorkItem?
+    var pendingTask3: DispatchWorkItem?
     
     // version
     
@@ -145,6 +149,21 @@ class ViewController: UIViewController {
         
         self.lastDirection = "up"
 
+        // show tip task
+        pendingTask = DispatchWorkItem {
+            debugPrint("pendingTask")
+            self.doTip(mode: "show")
+        }
+        
+        // hide tip task
+        pendingTask2 = DispatchWorkItem {
+            debugPrint("pendingTask2")
+            self.doTip(mode: "hide")
+        }
+        
+        // show initial tip after X seconds
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
+        
         // video
         
         playerLayer = AVPlayerLayer(player: self.player)
@@ -338,8 +357,6 @@ class ViewController: UIViewController {
         loadingbarView.image = animatedImage
         loadingbarView.layer.cornerRadius = 10
         
-        self.doTip(visible: false)
-        
         /*
         UIApplication.shared.beginReceivingRemoteControlEvents()
         self.becomeFirstResponder()
@@ -358,7 +375,7 @@ class ViewController: UIViewController {
         playerLayer?.isHidden = false
         playerLayer?.player?.isMuted = false
         playerLayer?.player?.play()
-        self.doTip(visible: false)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
      }
 
     
@@ -387,14 +404,18 @@ class ViewController: UIViewController {
     }
     
     func doRestartTimer() {
+        /*
         pendingTask2 = DispatchWorkItem {
-            self.doHide()
+            self.doTip(mode: "hide")
         }
+ 
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(lower: 300, upper: 5000)*1000)), execute: self.pendingTask2!)
+        */
     }
     
     func doInvalidateTimer() {
+        /*
         pendingTask2?.cancel()
         
         pendingTask = DispatchWorkItem {
@@ -402,6 +423,7 @@ class ViewController: UIViewController {
         }
         
         DispatchQueue.main.async(execute: self.pendingTask!)
+        */
     }
     
     func getRandomDouble(lower: UInt32, upper: UInt32) -> Double {
@@ -425,12 +447,18 @@ class ViewController: UIViewController {
         return self.someDouble!
     }
     
-    func doTip(visible: Bool) {
-        if (!visible) {
-            UIView.animate(withDuration: 0.3, delay: 5.0, options: [.curveEaseOut], animations: {
+    func doTip(mode: String) {
+        if (mode == "show") {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.tipView.alpha = 1.0
             }, completion: { (finished: Bool) in
-                // something
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask2!)
+            })
+        } else if (mode == "hide") {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.tipView.alpha = 0.0
+            }, completion: { (finished: Bool) in
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
             })
         }
     }
@@ -448,6 +476,21 @@ class ViewController: UIViewController {
         self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
         self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
+        // hide tip
+        pendingTask?.cancel()
+        pendingTask2?.cancel()
+        
+        // show tip task
+        pendingTask = DispatchWorkItem {
+            debugPrint("pendingTask")
+            self.doTip(mode: "show")
+        }
+        
+        // hide tip task
+        pendingTask2 = DispatchWorkItem {
+            debugPrint("pendingTask2")
+            self.doTip(mode: "hide")
+        }
         
         if (self.version == "Version A") {
             self.callsignView.alpha = 0.0
@@ -492,48 +535,31 @@ class ViewController: UIViewController {
                 
             })
         } else if (self.version == "Version B") {
-            debugPrint("version b tip alpha: \(String(describing: self.tipView.alpha))")
             
-            // hide tip
+            
             if (self.tipView.alpha == 1) {
+                debugPrint("VERSION BBBBBBBBBBBBBB IS ON!: \(String(describing: self.tipView.alpha))")
+                
+                // magic swap
+                self.tipView.alpha = 0
+                self.loading2View.alpha = 1
+                // self.loading2GradientView.alpha = 1.0
+                // self.loading2MessageView.alpha = 1.0
+            } else {
+                debugPrint("VERSION BBBBBBBBBBBBBB IS OFF!: \(String(describing: self.tipView.alpha))")
+                
                 UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                    self.tipView.alpha = 0.0
-                }, completion: { (finished: Bool) in
-                    // something
-                })
+                    self.loading2View.alpha = 1
+                }, completion: nil)
             }
             
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                self.loading2View.alpha = 1.0
-            }, completion: { (finished: Bool) in
-                UIView.animate(withDuration: 0.1, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
-                    self.loading2View.alpha = 0.0
-                    
-                    
-                }, completion: { (finished: Bool) in
-                    if (self.fakeIndex == 0) {
-                        self.playerLayer?.player?.isMuted = false
-                        self.player.isMuted = false
-                        self.playerLayer?.isHidden = false
-                        
-                        self.playerLayer2?.player?.isMuted = true
-                        self.player2.isMuted = true
-                        self.playerLayer2?.isHidden = true
-                        
-                    } else {
-                        self.playerLayer?.player?.isMuted = true
-                        self.player.isMuted = true
-                        self.playerLayer?.isHidden = true
-                        
-                        self.playerLayer2?.player?.isMuted = false
-                        self.player2.isMuted = false
-                        self.playerLayer2?.isHidden = false
-                    }
-                })
-                
-                
-            })
+            // hide loading 2
+            pendingTask3 = DispatchWorkItem {
+                debugPrint("pendingTask3")
+                self.doHide()
+            }
             
+            DispatchQueue.main.async(execute: self.pendingTask3!)
             
             
         } else { // basic
@@ -545,7 +571,7 @@ class ViewController: UIViewController {
                 self.callsignView.alpha = 1.0
                 self.logoView.alpha = 0.0
                 
-                UIView.animate(withDuration: 0.1, delay: 0.0, options: [.curveEaseOut], animations: {
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                     self.callsignView.alpha = 0.0
                     self.logoView.alpha = 1.0
                 }, completion: nil)
@@ -574,10 +600,36 @@ class ViewController: UIViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.loadingView.alpha = 0.0
             }, completion: { (finished: Bool) in
-                self.doTip(visible: false)
+                // show tip
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
             })
         } else if (self.version == "Version B") {
-            
+            debugPrint("version b DOHIDE: \(String(describing: self.version))")
+            UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
+                self.loading2View.alpha = 0.0
+            }, completion: { (finished: Bool) in
+                if (self.fakeIndex == 0) {
+                    self.playerLayer?.player?.isMuted = false
+                    self.player.isMuted = false
+                    self.playerLayer?.isHidden = false
+                    
+                    self.playerLayer2?.player?.isMuted = true
+                    self.player2.isMuted = true
+                    self.playerLayer2?.isHidden = true
+                    
+                } else {
+                    self.playerLayer?.player?.isMuted = true
+                    self.player.isMuted = true
+                    self.playerLayer?.isHidden = true
+                    
+                    self.playerLayer2?.player?.isMuted = false
+                    self.player2.isMuted = false
+                    self.playerLayer2?.isHidden = false
+                }
+                
+                // show tip
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
+            })
         }
     }
     
@@ -600,7 +652,9 @@ class ViewController: UIViewController {
         
         UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
             self.keyartView.alpha = 1.0
-        }, completion: nil)
+        }, completion: { (finished: Bool) in
+            self.doHide()
+        })
     }
     
 
@@ -647,6 +701,14 @@ class ViewController: UIViewController {
             doShow(direction: "left", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.rightArrow) {
             self.lastDirection = "right"
+            
+            if (self.fakeIndex == 0) {
+                self.fakeIndex = 1
+            } else {
+                self.fakeIndex = 0
+            }
+            
+            doShow(direction: "right", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.select) {
             self.doToggleVersion()
         }
@@ -660,9 +722,9 @@ class ViewController: UIViewController {
     
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         // Presses ended || cancelled, restart timer
-        self.doRestartTimer()
+        // self.doRestartTimer()
         
         // surfing timer
-        self.timerCancel(sender: event!)
+        // self.timerCancel(sender: event!)
     }
 }
