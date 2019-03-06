@@ -14,9 +14,8 @@
 		8D90242121AF334B00ADF066 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D90242021AF334B00ADF066 /* Assets.xcassets */; };
 		8D90242C21AF334C00ADF066 /* Video_LoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D90242B21AF334C00ADF066 /* Video_LoaderTests.swift */; };
 		8D90243721AF334C00ADF066 /* Video_LoaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D90243621AF334C00ADF066 /* Video_LoaderUITests.swift */; };
-		8DBFAF77222DF09500DC09BE /* espn.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 8DBFAF76222DF09500DC09BE /* espn.mp4 */; };
-		8DBFAF79222DF0C400DC09BE /* game.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 8DBFAF78222DF0C400DC09BE /* game.mp4 */; };
 		8DCFE1D321B09F2D00A30145 /* commercials.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 8DCFE1D221B09F2600A30145 /* commercials.mp4 */; };
+		8DE68169222F42A1007A36E1 /* espn.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 8DE68168222F42A1007A36E1 /* espn.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,9 +49,8 @@
 		8D90243221AF334C00ADF066 /* Video LoaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Video LoaderUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D90243621AF334C00ADF066 /* Video_LoaderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video_LoaderUITests.swift; sourceTree = "<group>"; };
 		8D90243821AF334C00ADF066 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8DBFAF76222DF09500DC09BE /* espn.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = espn.mp4; sourceTree = "<group>"; };
-		8DBFAF78222DF0C400DC09BE /* game.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = game.mp4; sourceTree = "<group>"; };
 		8DCFE1D221B09F2600A30145 /* commercials.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = commercials.mp4; sourceTree = "<group>"; };
+		8DE68168222F42A1007A36E1 /* espn.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = espn.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +81,7 @@
 		8D90240D21AF334900ADF066 = {
 			isa = PBXGroup;
 			children = (
-				8DBFAF78222DF0C400DC09BE /* game.mp4 */,
-				8DBFAF76222DF09500DC09BE /* espn.mp4 */,
+				8DE68168222F42A1007A36E1 /* espn.mp4 */,
 				8DCFE1D221B09F2600A30145 /* commercials.mp4 */,
 				8D90241821AF334900ADF066 /* Video Loader */,
 				8D90242A21AF334C00ADF066 /* Video LoaderTests */,
@@ -239,9 +236,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DCFE1D321B09F2D00A30145 /* commercials.mp4 in Resources */,
-				8DBFAF77222DF09500DC09BE /* espn.mp4 in Resources */,
+				8DE68169222F42A1007A36E1 /* espn.mp4 in Resources */,
 				8D90242121AF334B00ADF066 /* Assets.xcassets in Resources */,
-				8DBFAF79222DF0C400DC09BE /* game.mp4 in Resources */,
 				8D90241F21AF334900ADF066 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

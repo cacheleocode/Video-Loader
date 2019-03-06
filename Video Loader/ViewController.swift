@@ -13,6 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var metadataView: UILabel!
     @IBOutlet weak var loadingbarView: UIImageView!
     @IBOutlet weak var versionView: UILabel!
+    @IBOutlet weak var tipView: UIView!
+    @IBOutlet weak var tipMessageView: UILabel!
+    @IBOutlet weak var tipImageView: UIImageView!
+    
+    @IBOutlet weak var loading2View: UIView!
     
     // dispatch queue
     
@@ -108,7 +113,7 @@ class ViewController: UIViewController {
     // actual player
     
     var player = AVPlayer(url: URL(fileURLWithPath: Bundle.main.path(forResource: "commercials", ofType:"mp4")!))
-    var player2 = AVPlayer(url: URL(fileURLWithPath: Bundle.main.path(forResource: "game", ofType:"mp4")!))
+    var player2 = AVPlayer(url: URL(fileURLWithPath: Bundle.main.path(forResource: "espn", ofType:"mp4")!))
     
     // current channel
     
@@ -136,7 +141,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        self.version = "motionA"
+        self.version = "Version A"
         
         self.lastDirection = "up"
 
@@ -189,6 +194,29 @@ class ViewController: UIViewController {
         self.versionView.text = self.version
         self.versionView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -4)
         self.versionView.layer.position = CGPoint(x: 150, y: 150)
+        
+        /*
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.backgroundColor = #colorLiteral(red: 0.05882352941, green: 0.2392156863, blue: 0.3294117647, alpha: 0.5)
+        
+        blurEffectView.frame = self.tipView.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        blurEffectView.layer.shadowOffset = .zero
+        blurEffectView.layer.shadowColor = UIColor.black.cgColor
+        blurEffectView.layer.shadowRadius = 20
+        blurEffectView.layer.shadowOpacity = 0
+        blurEffectView.layer.shadowPath = UIBezierPath(rect: blurEffectView.bounds).cgPath
+        view.addSubview(blurEffectView)
+        */
+        
+        
+        
+        self.tipView.alpha = 0
+        self.loading2View.alpha = 0
+
         
         // loading view
         
@@ -310,6 +338,8 @@ class ViewController: UIViewController {
         loadingbarView.image = animatedImage
         loadingbarView.layer.cornerRadius = 10
         
+        self.doTip(visible: false)
+        
         /*
         UIApplication.shared.beginReceivingRemoteControlEvents()
         self.becomeFirstResponder()
@@ -328,7 +358,9 @@ class ViewController: UIViewController {
         playerLayer?.isHidden = false
         playerLayer?.player?.isMuted = false
         playerLayer?.player?.play()
+        self.doTip(visible: false)
      }
+
     
     // start timer
     @IBAction func timerStart(sender: UIPressesEvent) {
@@ -393,6 +425,16 @@ class ViewController: UIViewController {
         return self.someDouble!
     }
     
+    func doTip(visible: Bool) {
+        if (!visible) {
+            UIView.animate(withDuration: 0.3, delay: 5.0, options: [.curveEaseOut], animations: {
+                self.tipView.alpha = 1.0
+            }, completion: { (finished: Bool) in
+                // something
+            })
+        }
+    }
+    
     func doShow(direction: String, index: Int) {
         self.randomDouble = self.getRandomDouble(lower: 0, upper: 4)
         debugPrint("logooooooo mess: \(String(describing: self.randomDouble))")
@@ -406,7 +448,8 @@ class ViewController: UIViewController {
         self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
         self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
-        if (self.version == "motionA") {
+        
+        if (self.version == "Version A") {
             self.callsignView.alpha = 0.0
             
             // self.logoView.alpha = 0.0
@@ -430,20 +473,69 @@ class ViewController: UIViewController {
             }, completion: { (finished: Bool) in
                 self.doPopulate()
                 
-                if (index == 0) {
-                    self.playerLayer?.player?.isMuted = false
-                    self.playerLayer?.isHidden = false
-                    
-                    self.playerLayer2?.player?.isMuted = true
-                    self.playerLayer2?.isHidden = true
-                } else {
-                    self.playerLayer?.player?.isMuted = true
-                    self.playerLayer?.isHidden = true
-                    
-                    self.playerLayer2?.player?.isMuted = false
-                    self.playerLayer2?.isHidden = false
+                // hide tip
+                if (self.tipView.alpha == 1) {
+                    self.tipView.alpha = 0
                 }
+                
+                
+                
+                // swap video
+                
+                self.playerLayer?.player?.isMuted = true
+                self.player.isMuted = true
+                self.playerLayer?.isHidden = true
+                self.playerLayer2?.player?.isMuted = true
+                self.player2.isMuted = true
+                self.playerLayer2?.isHidden = true
+                
+                
             })
+        } else if (self.version == "Version B") {
+            debugPrint("version b tip alpha: \(String(describing: self.tipView.alpha))")
+            
+            // hide tip
+            if (self.tipView.alpha == 1) {
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                    self.tipView.alpha = 0.0
+                }, completion: { (finished: Bool) in
+                    // something
+                })
+            }
+            
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.loading2View.alpha = 1.0
+            }, completion: { (finished: Bool) in
+                UIView.animate(withDuration: 0.1, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
+                    self.loading2View.alpha = 0.0
+                    
+                    
+                }, completion: { (finished: Bool) in
+                    if (self.fakeIndex == 0) {
+                        self.playerLayer?.player?.isMuted = false
+                        self.player.isMuted = false
+                        self.playerLayer?.isHidden = false
+                        
+                        self.playerLayer2?.player?.isMuted = true
+                        self.player2.isMuted = true
+                        self.playerLayer2?.isHidden = true
+                        
+                    } else {
+                        self.playerLayer?.player?.isMuted = true
+                        self.player.isMuted = true
+                        self.playerLayer?.isHidden = true
+                        
+                        self.playerLayer2?.player?.isMuted = false
+                        self.player2.isMuted = false
+                        self.playerLayer2?.isHidden = false
+                    }
+                })
+                
+                
+            })
+            
+            
+            
         } else { // basic
             self.loadingView.alpha = 1.0
             self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial
@@ -467,10 +559,26 @@ class ViewController: UIViewController {
     }
 
     func doHide() {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.loadingView.alpha = 0.0
-            self.player.isMuted = false
-        }, completion: nil)
+        if (self.version == "Version A") {
+            if (self.fakeIndex == 0) {
+                self.playerLayer?.player?.isMuted = false
+                self.player.isMuted = false
+                self.playerLayer?.isHidden = false
+            } else {
+                self.playerLayer2?.player?.isMuted = false
+                self.player2.isMuted = false
+                self.playerLayer2?.isHidden = false
+            }
+            
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                self.loadingView.alpha = 0.0
+            }, completion: { (finished: Bool) in
+                self.doTip(visible: false)
+            })
+        } else if (self.version == "Version B") {
+            
+        }
     }
     
     func doPopulate() {
@@ -487,7 +595,7 @@ class ViewController: UIViewController {
             self.metadataView.alpha = 1.0
             self.loadingbarView.alpha = 1.0
         }, completion: { (finished: Bool) in
-            self.player.isMuted = true
+            
         })
         
         UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
@@ -497,11 +605,11 @@ class ViewController: UIViewController {
     
 
     func doToggleVersion () {
-        if (version == "motionA") {
-            self.version = "simple"
+        if (version == "Version A") {
+            self.version = "Version B"
             
         } else {
-            self.version = "motionA"
+            self.version = "Version A"
         }
         
         self.versionView.text = self.version
@@ -539,6 +647,8 @@ class ViewController: UIViewController {
             doShow(direction: "left", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.rightArrow) {
             self.lastDirection = "right"
+        } else if(presses.first?.type == UIPress.PressType.select) {
+            self.doToggleVersion()
         }
         
         // Presses in progress - !ended, !cancelled, just invalidate it
