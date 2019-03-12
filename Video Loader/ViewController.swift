@@ -13,13 +13,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var metadataView: UILabel!
     @IBOutlet weak var loadingbarView: UIImageView!
     @IBOutlet weak var versionView: UILabel!
-    @IBOutlet weak var tipView: UIView!
-    @IBOutlet weak var tipGradientView: UIImageView!
-    @IBOutlet weak var tipMessageView: UILabel!
-    @IBOutlet weak var tipImageView: UIImageView!
+    
+    @IBOutlet weak var leftTipBackgroundView: UIImageView!
+    @IBOutlet weak var leftTipView: UIView!
+    
+    @IBOutlet weak var rightTipBackgroundView: UIImageView!
+    @IBOutlet weak var rightTipView: UIView!
     
     @IBOutlet weak var loading2View: UIView!
-    @IBOutlet weak var loading2GradientView: UIImageView!
     @IBOutlet weak var loading2MessageView: UILabel!
     
     // dispatch queue
@@ -137,6 +138,9 @@ class ViewController: UIViewController {
     
     var lastDirection: String!
     
+    
+    var loading2ViewFrameOriginXInitial: CGFloat!
+    
     // timer
     
     var counter = 0
@@ -149,20 +153,24 @@ class ViewController: UIViewController {
         
         self.lastDirection = "up"
 
-        // show tip task
         pendingTask = DispatchWorkItem {
-            debugPrint("pendingTask")
             self.doTip(mode: "show")
         }
         
-        // hide tip task
         pendingTask2 = DispatchWorkItem {
-            debugPrint("pendingTask2")
             self.doTip(mode: "hide")
         }
         
+        // hide loading 2
+        self.pendingTask3 = DispatchWorkItem {
+            self.doHide()
+        }
+        
         // show initial tip after X seconds
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
+        // DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
+        
+        // debug
+        DispatchQueue.main.async(execute: self.pendingTask!)
         
         // video
         
@@ -210,32 +218,43 @@ class ViewController: UIViewController {
         
         // initial appearance
         
-        self.versionView.text = self.version
+        self.versionView.text = "full, left"
         self.versionView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -4)
         self.versionView.layer.position = CGPoint(x: 150, y: 150)
         
-        /*
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.backgroundColor = #colorLiteral(red: 0.05882352941, green: 0.2392156863, blue: 0.3294117647, alpha: 0.5)
         
-        blurEffectView.frame = self.tipView.bounds
+        blurEffectView.frame = self.loading2View.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
+        /*
         blurEffectView.layer.shadowOffset = .zero
         blurEffectView.layer.shadowColor = UIColor.black.cgColor
         blurEffectView.layer.shadowRadius = 20
         blurEffectView.layer.shadowOpacity = 0
         blurEffectView.layer.shadowPath = UIBezierPath(rect: blurEffectView.bounds).cgPath
-        view.addSubview(blurEffectView)
         */
         
+        // view.addSubview(blurEffectView)
         
+        self.loading2View.addSubview(blurEffectView)
+        self.loading2View.insertSubview(blurEffectView, at: 0)
         
-        self.tipView.alpha = 0
-        self.loading2View.alpha = 0
+        // tip
+        self.leftTipBackgroundView.alpha = 0
+        self.leftTipView.frame.origin.x = 90
+        self.leftTipView.alpha = 0
 
+        self.rightTipBackgroundView.alpha = 0
+        self.rightTipView.frame.origin.x = -90
+        self.rightTipView.alpha = 0
+
+        // loading 2
+        self.loading2View.alpha = 0
+        self.loading2View.frame.origin.x = -500
         
         // loading view
         
@@ -250,6 +269,9 @@ class ViewController: UIViewController {
         self.titleView.alpha = 0.0
         self.metadataView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
+        
+        
+        self.loading2ViewFrameOriginXInitial = self.loading2View.frame.origin.x
         
         // fake index
         self.fakeIndex = 0
@@ -449,14 +471,35 @@ class ViewController: UIViewController {
     
     func doTip(mode: String) {
         if (mode == "show") {
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                self.tipView.alpha = 1.0
+            self.leftTipBackgroundView.alpha = 0
+            self.leftTipView.alpha = 0
+            self.leftTipView.frame.origin.x = 90
+            
+            self.rightTipBackgroundView.alpha = 0
+            self.rightTipView.alpha = 0
+            self.rightTipView.frame.origin.x = -90
+            
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.leftTipBackgroundView.alpha = 1
+                self.leftTipView.alpha = 1
+                self.leftTipView.frame.origin.x = 0
+                
+                if (self.version == "Version B" || self.version == "Version D") {
+                    self.rightTipBackgroundView.alpha = 1
+                    self.rightTipView.alpha = 1
+                    self.rightTipView.frame.origin.x = 0
+                }
             }, completion: { (finished: Bool) in
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask2!)
             })
         } else if (mode == "hide") {
             UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                self.tipView.alpha = 0.0
+                self.leftTipBackgroundView.alpha = 0
+                self.leftTipView.alpha = 0
+                
+                self.rightTipBackgroundView.alpha = 0
+                self.rightTipView.alpha = 0
+
             }, completion: { (finished: Bool) in
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
             })
@@ -467,7 +510,6 @@ class ViewController: UIViewController {
         self.randomDouble = self.getRandomDouble(lower: 0, upper: 4)
         debugPrint("logooooooo mess: \(String(describing: self.randomDouble))")
         
-        
         // populate loading view
         
         self.keyartView.image = UIImage(named: String(describing: self.channelKeyarts[self.fakeIndex]))
@@ -476,29 +518,34 @@ class ViewController: UIViewController {
         self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
         self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
-        // hide tip
+        // destroy queued tasks
         pendingTask?.cancel()
         pendingTask2?.cancel()
         
-        // show tip task
+        // recreate tasks
         pendingTask = DispatchWorkItem {
-            debugPrint("pendingTask")
             self.doTip(mode: "show")
         }
         
-        // hide tip task
         pendingTask2 = DispatchWorkItem {
-            debugPrint("pendingTask2")
             self.doTip(mode: "hide")
         }
         
-        if (self.version == "Version A") {
+        // hide tip
+        if (self.leftTipView.alpha == 1) {
+            self.leftTipBackgroundView.alpha = 0
+            self.leftTipView.alpha = 0
+        }
+        
+        // hide tip
+        if (self.rightTipView.alpha == 1) {
+            self.rightTipBackgroundView.alpha = 0
+            self.rightTipView.alpha = 0
+        }
+        
+        if (self.version == "Version A" || self.version == "Version B") {
             self.callsignView.alpha = 0.0
-            
-            // self.logoView.alpha = 0.0
-            
             self.keyartView.alpha = 0.0
-            
             self.titleView.alpha = 0.0
             self.loadingbarView.alpha = 0.0
             self.metadataView.alpha = 0.0
@@ -514,159 +561,118 @@ class ViewController: UIViewController {
                     self.logoView.alpha = 1.0
                 }
             }, completion: { (finished: Bool) in
-                self.doPopulate()
+                self.titleView.alpha = 0.0
+                self.loadingbarView.alpha = 0.0
+                self.metadataView.alpha = 0.0
+                self.keyartView.alpha = 0.0
                 
-                // hide tip
-                if (self.tipView.alpha == 1) {
-                    self.tipView.alpha = 0
-                }
+                UIView.animate(withDuration: 0.3, delay: 0.3, options: [.curveEaseOut], animations: {
+                    self.titleView.alpha = 1.0
+                    self.metadataView.alpha = 1.0
+                    self.loadingbarView.alpha = 1.0
+                }, completion: nil)
                 
                 
+                // random delay
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(lower: 300, upper: 3000)*1000)), execute: self.pendingTask3!)
                 
                 // swap video
-                
                 self.playerLayer?.player?.isMuted = true
                 self.player.isMuted = true
                 self.playerLayer?.isHidden = true
                 self.playerLayer2?.player?.isMuted = true
                 self.player2.isMuted = true
                 self.playerLayer2?.isHidden = true
-                
-                
             })
-        } else if (self.version == "Version B") {
-            
-            
-            if (self.tipView.alpha == 1) {
-                debugPrint("VERSION BBBBBBBBBBBBBB IS ON!: \(String(describing: self.tipView.alpha))")
+        } else if (self.version == "Version C" || self.version == "Version D") {
+            if (self.loading2View.alpha != 1) {
+                self.loading2View.alpha = 0
                 
-                // magic swap
-                self.tipView.alpha = 0
-                self.loading2View.alpha = 1
-                // self.loading2GradientView.alpha = 1.0
-                // self.loading2MessageView.alpha = 1.0
-            } else {
-                debugPrint("VERSION BBBBBBBBBBBBBB IS OFF!: \(String(describing: self.tipView.alpha))")
-                
+                if (direction == "right") {
+                    self.loading2View.frame.origin.x = 2420
+                } else {
+                    self.loading2View.frame.origin.x = -500
+                }
+             
                 UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                     self.loading2View.alpha = 1
-                }, completion: nil)
-            }
-            
-            // hide loading 2
-            pendingTask3 = DispatchWorkItem {
-                debugPrint("pendingTask3")
-                self.doHide()
-            }
-            
-            DispatchQueue.main.async(execute: self.pendingTask3!)
-            
-            
-        } else { // basic
-            self.loadingView.alpha = 1.0
-            self.callsignView.frame.origin.y = self.callsignViewFrameOriginYInitial
-            self.logoView.frame.origin.y = self.logoViewFrameOriginYInitial
-            
-            if (self.randomDouble == 0.0) {
-                self.callsignView.alpha = 1.0
-                self.logoView.alpha = 0.0
-                
-                UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                    self.callsignView.alpha = 0.0
-                    self.logoView.alpha = 1.0
+                    
+                    if (direction == "right") {
+                        self.loading2View.frame.origin.x = 1420
+                    } else {
+                        self.loading2View.frame.origin.x = 0
+                    }
+                    
+                    // random delay
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(lower: 300, upper: 3000)*1000)), execute: self.pendingTask3!)
                 }, completion: nil)
             } else {
-                self.callsignView.alpha = 0.0
-                self.logoView.alpha = 1.0
-            }
-            
-            self.doPopulate()
+                // uhh
+            } // self.loading2View.alpha
         }
     }
 
     func doHide() {
-        if (self.version == "Version A") {
-            if (self.fakeIndex == 0) {
-                self.playerLayer?.player?.isMuted = false
-                self.player.isMuted = false
-                self.playerLayer?.isHidden = false
-            } else {
-                self.playerLayer2?.player?.isMuted = false
-                self.player2.isMuted = false
-                self.playerLayer2?.isHidden = false
-            }
-            
-            
-            UIView.animate(withDuration: 0.3, animations: {
+        if (self.version == "Version A" || self.version == "Version B") {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.keyartView.alpha = 1.0
+            }, completion: { (finished: Bool) in
                 self.loadingView.alpha = 0.0
-            }, completion: { (finished: Bool) in
-                // show tip
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
-            })
-        } else if (self.version == "Version B") {
-            debugPrint("version b DOHIDE: \(String(describing: self.version))")
-            UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
-                self.loading2View.alpha = 0.0
-            }, completion: { (finished: Bool) in
+                
                 if (self.fakeIndex == 0) {
                     self.playerLayer?.player?.isMuted = false
                     self.player.isMuted = false
                     self.playerLayer?.isHidden = false
-                    
-                    self.playerLayer2?.player?.isMuted = true
-                    self.player2.isMuted = true
-                    self.playerLayer2?.isHidden = true
-                    
                 } else {
-                    self.playerLayer?.player?.isMuted = true
-                    self.player.isMuted = true
-                    self.playerLayer?.isHidden = true
-                    
                     self.playerLayer2?.player?.isMuted = false
                     self.player2.isMuted = false
                     self.playerLayer2?.isHidden = false
                 }
-                
-                // show tip
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
             })
-        }
-    }
-    
-    func doPopulate() {
-        self.titleView.alpha = 0.0
-        self.loadingbarView.alpha = 0.0
-        self.metadataView.alpha = 0.0
-        self.keyartView.alpha = 0.0
-        
-        // self.loadingbarView.alpha = 1.0
-        // self.loadingbarView.startAnimating()
-        
-        UIView.animate(withDuration: 0.3, delay: 0.3, options: [.curveEaseOut], animations: {
-            self.titleView.alpha = 1.0
-            self.metadataView.alpha = 1.0
-            self.loadingbarView.alpha = 1.0
-        }, completion: { (finished: Bool) in
+        } else if (self.version == "Version C" || self.version == "Version D") {
+            self.loading2View.alpha = 0.0
             
-        })
+            if (self.fakeIndex == 0) {
+                self.playerLayer?.player?.isMuted = false
+                self.player.isMuted = false
+                self.playerLayer?.isHidden = false
+                
+                self.playerLayer2?.player?.isMuted = true
+                self.player2.isMuted = true
+                self.playerLayer2?.isHidden = true
+                
+            } else {
+                self.playerLayer?.player?.isMuted = true
+                self.player.isMuted = true
+                self.playerLayer?.isHidden = true
+                
+                self.playerLayer2?.player?.isMuted = false
+                self.player2.isMuted = false
+                self.playerLayer2?.isHidden = false
+            }
+        }
         
-        UIView.animate(withDuration: 0.3, delay: self.getRandomDouble(lower: 300, upper: 3000), options: [.curveEaseOut], animations: {
-            self.keyartView.alpha = 1.0
-        }, completion: { (finished: Bool) in
-            self.doHide()
-        })
+        // show tip
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
     }
-    
 
     func doToggleVersion () {
-        if (version == "Version A") {
-            self.version = "Version B"
-            
-        } else {
-            self.version = "Version A"
+        switch (self.version) {
+            case "Version A":
+                self.version = "Version B"
+                self.versionView.text = "full, both"
+            case "Version B":
+                self.version = "Version C"
+                self.versionView.text = "peek, left"
+            case "Version C":
+                self.version = "Version D"
+                self.versionView.text = "peek, both"
+            case "Version D":
+                self.version = "Version A"
+                self.versionView.text = "full, left"
+            default:
+                self.versionView.text = self.version
         }
-        
-        self.versionView.text = self.version
     }
     
     func doLogo() {
@@ -692,6 +698,7 @@ class ViewController: UIViewController {
             
             debugPrint("fake index: \(String(describing: self.fakeIndex))")
             
+            
             if (self.fakeIndex == 0) {
                 self.fakeIndex = 1
             } else {
@@ -700,24 +707,20 @@ class ViewController: UIViewController {
             
             doShow(direction: "left", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.rightArrow) {
-            self.lastDirection = "right"
-            
-            if (self.fakeIndex == 0) {
-                self.fakeIndex = 1
-            } else {
-                self.fakeIndex = 0
+            if (self.version == "Version B" || self.version == "Version D") {
+                self.lastDirection = "right"
+                
+                if (self.fakeIndex == 0) {
+                    self.fakeIndex = 1
+                } else {
+                    self.fakeIndex = 0
+                }
+                
+                doShow(direction: "right", index: self.fakeIndex)
             }
-            
-            doShow(direction: "right", index: self.fakeIndex)
         } else if(presses.first?.type == UIPress.PressType.select) {
             self.doToggleVersion()
         }
-        
-        // Presses in progress - !ended, !cancelled, just invalidate it
-        // self.doInvalidateTimer()
-        
-        // surfing timer
-        // self.timerStart(sender: event!)
     }
     
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {

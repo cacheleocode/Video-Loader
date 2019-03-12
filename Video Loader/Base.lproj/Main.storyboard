@@ -25,35 +25,50 @@
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hK0-gf-McK">
                                 <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_bg" translatesAutoresizingMaskIntoConstraints="NO" id="RJt-Rb-QpB">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u9y-ek-cVQ">
                                 <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="overlay1" translatesAutoresizingMaskIntoConstraints="NO" id="Qrj-Ka-SBL">
-                                        <rect key="frame" x="0.0" y="0.0" width="316" height="1080"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="P3y-5v-Lm5">
+                                        <rect key="frame" x="161" y="439" width="36" height="61"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="overlay2" translatesAutoresizingMaskIntoConstraints="NO" id="1Mh-cj-2oY">
-                                        <rect key="frame" x="0.0" y="0.0" width="316" height="1080"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Press LEFT for Previous Channel" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x93-F5-GfX">
+                                        <rect key="frame" x="54" y="541" width="250" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tip_gradient" translatesAutoresizingMaskIntoConstraints="NO" id="RJt-Rb-QpB">
-                                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_arrows" translatesAutoresizingMaskIntoConstraints="NO" id="P3y-5v-Lm5">
-                                        <rect key="frame" x="30" y="512" width="120" height="64"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Press Left for Previous Channel" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x93-F5-GfX">
-                                        <rect key="frame" x="100" y="484" width="250" height="120"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="28"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="29"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="right_tip_bg" translatesAutoresizingMaskIntoConstraints="NO" id="lmu-oY-WXX">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ud2-kt-bTu">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="right_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="ZN9-9f-kgX">
+                                        <rect key="frame" x="1709" y="439" width="36" height="61"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Press RIGHT for Previous Channel" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gvk-hJ-TJy">
+                                        <rect key="frame" x="1603" y="541" width="250" height="100"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="29"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <viewLayoutGuide key="safeArea" id="8wE-8z-IOn"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l5x-9y-VHb">
                                 <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
@@ -107,13 +122,9 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pcC-d8-cTg">
-                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <rect key="frame" x="0.0" y="0.0" width="500" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tip_gradient" translatesAutoresizingMaskIntoConstraints="NO" id="i21-4h-WvX">
-                                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Loading Previous Channel" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4e-RN-9Z5">
                                         <rect key="frame" x="100" y="484" width="250" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -136,17 +147,16 @@
                     <connections>
                         <outlet property="callsignView" destination="4Di-Qs-Ho0" id="GIL-6G-BB3"/>
                         <outlet property="keyartView" destination="f9a-fS-nND" id="ekn-vU-yWU"/>
-                        <outlet property="loading2GradientView" destination="i21-4h-WvX" id="8mB-4I-GaO"/>
+                        <outlet property="leftTipBackgroundView" destination="RJt-Rb-QpB" id="ZBK-DV-DjC"/>
+                        <outlet property="leftTipView" destination="u9y-ek-cVQ" id="65c-m1-p0s"/>
                         <outlet property="loading2MessageView" destination="U4e-RN-9Z5" id="eMe-1m-qKI"/>
                         <outlet property="loading2View" destination="pcC-d8-cTg" id="kRK-Ls-DLH"/>
                         <outlet property="loadingView" destination="l5x-9y-VHb" id="U3I-qi-QXc"/>
                         <outlet property="loadingbarView" destination="Hf6-SI-72t" id="B7W-pb-L9q"/>
                         <outlet property="logoView" destination="LSo-T9-Xb4" id="cXR-O4-AsT"/>
                         <outlet property="metadataView" destination="tc7-gg-J9Q" id="WB5-T2-cfE"/>
-                        <outlet property="tipGradientView" destination="RJt-Rb-QpB" id="pRi-9v-qch"/>
-                        <outlet property="tipImageView" destination="P3y-5v-Lm5" id="TWK-wn-KlE"/>
-                        <outlet property="tipMessageView" destination="x93-F5-GfX" id="cew-ot-46z"/>
-                        <outlet property="tipView" destination="u9y-ek-cVQ" id="IDE-x3-Hxa"/>
+                        <outlet property="rightTipBackgroundView" destination="lmu-oY-WXX" id="4Rj-Tv-UWk"/>
+                        <outlet property="rightTipView" destination="ud2-kt-bTu" id="KYF-2A-Il8"/>
                         <outlet property="titleView" destination="QXp-7V-G5W" id="Pdf-zv-dPr"/>
                         <outlet property="versionView" destination="i8l-NZ-Ndj" id="DZ2-7Z-bIx"/>
                         <outlet property="videoView" destination="hK0-gf-McK" id="0MG-9Q-s5e"/>
@@ -157,11 +167,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="left_arrows" width="36" height="61"/>
+        <image name="left_tip_arrow" width="36" height="61"/>
+        <image name="left_tip_bg" width="703" height="1080"/>
         <image name="loader-keyart-overlay" width="1920" height="1080"/>
-        <image name="overlay1" width="281" height="1080"/>
-        <image name="overlay2" width="281" height="1080"/>
-        <image name="tip_gradient" width="746" height="1080"/>
+        <image name="right_tip_arrow" width="36" height="61"/>
+        <image name="right_tip_bg" width="703" height="1080"/>
         <image name="videoloadingbar_loop_00000" width="1920" height="24"/>
     </resources>
 </document>
