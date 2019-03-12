@@ -20,8 +20,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var rightTipBackgroundView: UIImageView!
     @IBOutlet weak var rightTipView: UIView!
     
-    @IBOutlet weak var loading2View: UIView!
-    @IBOutlet weak var loading2MessageView: UILabel!
+    @IBOutlet weak var leftLoadingView: UIView!
+    @IBOutlet weak var leftLoadingLogoView: UIImageView!
+    @IBOutlet weak var leftLoadingTitleView: UILabel!
+    @IBOutlet weak var leftLoadingMetadataView: UILabel!
+    
+    @IBOutlet weak var rightLoadingView: UIView!
+    @IBOutlet weak var rightLoadingLogoView: UIImageView!
+    @IBOutlet weak var rightLoadingTitleView: UILabel!
+    @IBOutlet weak var rightLoadingMetadataView: UILabel!
     
     // dispatch queue
     
@@ -47,7 +54,7 @@ class ViewController: UIViewController {
     
     let channelLogos = ["logo_cbs", "logo_espn"]
     
-    var channelTitles = ["The Talk", "UCLA vs AZW"]
+    var channelTitles = ["The Talk", "SportsNation"]
     
     var channelMetadatas = ["S7 EP182 | Actress Salma Hayek", "2017"]
     
@@ -138,9 +145,6 @@ class ViewController: UIViewController {
     
     var lastDirection: String!
     
-    
-    var loading2ViewFrameOriginXInitial: CGFloat!
-    
     // timer
     
     var counter = 0
@@ -225,10 +229,16 @@ class ViewController: UIViewController {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.backgroundColor = #colorLiteral(red: 0.05882352941, green: 0.2392156863, blue: 0.3294117647, alpha: 0.5)
+        blurEffectView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.7)
         
-        blurEffectView.frame = self.loading2View.bounds
+        blurEffectView.frame = self.leftLoadingView.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        let blurEffectView2 = UIVisualEffectView(effect: blurEffect)
+        blurEffectView2.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.7)
+        
+        blurEffectView2.frame = self.rightLoadingView.bounds
+        blurEffectView2.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         /*
         blurEffectView.layer.shadowOffset = .zero
@@ -240,8 +250,9 @@ class ViewController: UIViewController {
         
         // view.addSubview(blurEffectView)
         
-        self.loading2View.addSubview(blurEffectView)
-        self.loading2View.insertSubview(blurEffectView, at: 0)
+        self.leftLoadingView.insertSubview(blurEffectView, at: 0)
+        
+        self.rightLoadingView.insertSubview(blurEffectView2, at: 0)
         
         // tip
         self.leftTipBackgroundView.alpha = 0
@@ -252,12 +263,14 @@ class ViewController: UIViewController {
         self.rightTipView.frame.origin.x = -90
         self.rightTipView.alpha = 0
 
-        // loading 2
-        self.loading2View.alpha = 0
-        self.loading2View.frame.origin.x = -500
+        // partial loading views
+        self.leftLoadingView.alpha = 0
+        self.leftLoadingView.frame.origin.x = -500
         
-        // loading view
+        self.rightLoadingView.alpha = 0
+        self.rightLoadingView.frame.origin.x = 2040
         
+        // full loading view
         self.loadingView.alpha = 0.0
         self.keyartView.alpha = 0.0
         self.callsignView.alpha = 0.0
@@ -269,9 +282,6 @@ class ViewController: UIViewController {
         self.titleView.alpha = 0.0
         self.metadataView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
-        
-        
-        self.loading2ViewFrameOriginXInitial = self.loading2View.frame.origin.x
         
         // fake index
         self.fakeIndex = 0
@@ -518,6 +528,14 @@ class ViewController: UIViewController {
         self.titleView.text = String(describing: self.channelTitles[self.fakeIndex])
         self.metadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
+        self.leftLoadingLogoView.image = UIImage(named: String(describing: self.channelLogos[self.fakeIndex]))
+        self.leftLoadingTitleView.text = String(describing: self.channelTitles[self.fakeIndex])
+        self.leftLoadingMetadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
+        
+        self.rightLoadingLogoView.image = UIImage(named: String(describing: self.channelLogos[self.fakeIndex]))
+        self.rightLoadingTitleView.text = String(describing: self.channelTitles[self.fakeIndex])
+        self.rightLoadingMetadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
+        
         // destroy queued tasks
         pendingTask?.cancel()
         pendingTask2?.cancel()
@@ -585,30 +603,26 @@ class ViewController: UIViewController {
                 self.playerLayer2?.isHidden = true
             })
         } else if (self.version == "Version C" || self.version == "Version D") {
-            if (self.loading2View.alpha != 1) {
-                self.loading2View.alpha = 0
-                
-                if (direction == "right") {
-                    self.loading2View.frame.origin.x = 2420
+            self.surfing = true
+            
+            self.leftLoadingView.alpha = 0
+            self.leftLoadingView.frame.origin.x = -500
+            
+            self.rightLoadingView.alpha = 0
+            self.rightLoadingView.frame.origin.x = 2420
+            
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                if (direction == "left") {
+                    self.leftLoadingView.alpha = 1
+                    self.leftLoadingView.frame.origin.x = 0
                 } else {
-                    self.loading2View.frame.origin.x = -500
+                    self.rightLoadingView.alpha = 1
+                    self.rightLoadingView.frame.origin.x = 1420
                 }
-             
-                UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
-                    self.loading2View.alpha = 1
-                    
-                    if (direction == "right") {
-                        self.loading2View.frame.origin.x = 1420
-                    } else {
-                        self.loading2View.frame.origin.x = 0
-                    }
-                    
-                    // random delay
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(lower: 300, upper: 3000)*1000)), execute: self.pendingTask3!)
-                }, completion: nil)
-            } else {
-                // uhh
-            } // self.loading2View.alpha
+                
+                // random delay
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(self.getRandomDouble(lower: 300, upper: 3000)*1000)), execute: self.pendingTask3!)
+            }, completion: nil)
         }
     }
 
@@ -630,7 +644,10 @@ class ViewController: UIViewController {
                 }
             })
         } else if (self.version == "Version C" || self.version == "Version D") {
-            self.loading2View.alpha = 0.0
+            self.surfing = false
+            
+            self.leftLoadingView.alpha = 0.0
+            self.rightLoadingView.alpha = 0.0
             
             if (self.fakeIndex == 0) {
                 self.playerLayer?.player?.isMuted = false
@@ -663,10 +680,10 @@ class ViewController: UIViewController {
                 self.versionView.text = "full, both"
             case "Version B":
                 self.version = "Version C"
-                self.versionView.text = "peek, left"
+                self.versionView.text = "partial, left"
             case "Version C":
                 self.version = "Version D"
-                self.versionView.text = "peek, both"
+                self.versionView.text = "partial, both"
             case "Version D":
                 self.version = "Version A"
                 self.versionView.text = "full, left"
@@ -685,7 +702,7 @@ class ViewController: UIViewController {
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        if(presses.first?.type == UIPress.PressType.upArrow) {
+        if (presses.first?.type == UIPress.PressType.upArrow) {
             // debugPrint("up arrow began")
             
             self.lastDirection = "up"
@@ -694,21 +711,11 @@ class ViewController: UIViewController {
             
             self.lastDirection = "down"
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
-            self.lastDirection = "left"
-            
-            debugPrint("fake index: \(String(describing: self.fakeIndex))")
-            
-            
-            if (self.fakeIndex == 0) {
-                self.fakeIndex = 1
-            } else {
-                self.fakeIndex = 0
-            }
-            
-            doShow(direction: "left", index: self.fakeIndex)
-        } else if(presses.first?.type == UIPress.PressType.rightArrow) {
-            if (self.version == "Version B" || self.version == "Version D") {
-                self.lastDirection = "right"
+            if (self.surfing == false) {
+                self.lastDirection = "left"
+                
+                debugPrint("fake index: \(String(describing: self.fakeIndex))")
+                
                 
                 if (self.fakeIndex == 0) {
                     self.fakeIndex = 1
@@ -716,7 +723,21 @@ class ViewController: UIViewController {
                     self.fakeIndex = 0
                 }
                 
-                doShow(direction: "right", index: self.fakeIndex)
+                doShow(direction: "left", index: self.fakeIndex)
+            }
+        } else if(presses.first?.type == UIPress.PressType.rightArrow) {
+            if (self.surfing == false) {
+                if (self.version == "Version B" || self.version == "Version D") {
+                    self.lastDirection = "right"
+                    
+                    if (self.fakeIndex == 0) {
+                        self.fakeIndex = 1
+                    } else {
+                        self.fakeIndex = 0
+                    }
+                    
+                    doShow(direction: "right", index: self.fakeIndex)
+                }
             }
         } else if(presses.first?.type == UIPress.PressType.select) {
             self.doToggleVersion()

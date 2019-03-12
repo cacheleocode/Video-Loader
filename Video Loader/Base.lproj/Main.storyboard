@@ -125,14 +125,58 @@
                                 <rect key="frame" x="0.0" y="0.0" width="500" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Loading Previous Channel" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4e-RN-9Z5">
-                                        <rect key="frame" x="100" y="484" width="250" height="120"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Program Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4e-RN-9Z5">
+                                        <rect key="frame" x="100" y="572" width="250" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="28"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Metadata" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AMQ-9d-YOw">
+                                        <rect key="frame" x="96" y="622" width="250" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="29"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="right_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="PbI-d6-uUK">
+                                        <rect key="frame" x="387" y="524" width="36" height="61"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_amc" translatesAutoresizingMaskIntoConstraints="NO" id="6Eu-lC-1C2">
+                                        <rect key="frame" x="165" y="477" width="120" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h2Z-kk-yNx">
+                                <rect key="frame" x="1420" y="0.0" width="500" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_amc" translatesAutoresizingMaskIntoConstraints="NO" id="qi1-Vg-BzB">
+                                        <rect key="frame" x="216" y="477" width="120" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Program Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KcN-8I-ZcF">
+                                        <rect key="frame" x="151" y="572" width="250" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Metadata" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ya6-kD-ZlD">
+                                        <rect key="frame" x="151" y="622" width="250" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="29"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Zly-hf-46x">
+                                        <rect key="frame" x="53" y="524" width="36" height="61"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <viewLayoutGuide key="safeArea" id="3sw-0X-tuf"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8l-NZ-Ndj">
                                 <rect key="frame" x="0.0" y="0.0" width="1000" height="50"/>
@@ -147,14 +191,20 @@
                     <connections>
                         <outlet property="callsignView" destination="4Di-Qs-Ho0" id="GIL-6G-BB3"/>
                         <outlet property="keyartView" destination="f9a-fS-nND" id="ekn-vU-yWU"/>
+                        <outlet property="leftLoadingLogoView" destination="6Eu-lC-1C2" id="4ye-e2-CWS"/>
+                        <outlet property="leftLoadingMetadataView" destination="AMQ-9d-YOw" id="o1S-cl-cRq"/>
+                        <outlet property="leftLoadingTitleView" destination="U4e-RN-9Z5" id="exL-kV-xLD"/>
+                        <outlet property="leftLoadingView" destination="pcC-d8-cTg" id="hHa-Ze-3uX"/>
                         <outlet property="leftTipBackgroundView" destination="RJt-Rb-QpB" id="ZBK-DV-DjC"/>
                         <outlet property="leftTipView" destination="u9y-ek-cVQ" id="65c-m1-p0s"/>
-                        <outlet property="loading2MessageView" destination="U4e-RN-9Z5" id="eMe-1m-qKI"/>
-                        <outlet property="loading2View" destination="pcC-d8-cTg" id="kRK-Ls-DLH"/>
                         <outlet property="loadingView" destination="l5x-9y-VHb" id="U3I-qi-QXc"/>
                         <outlet property="loadingbarView" destination="Hf6-SI-72t" id="B7W-pb-L9q"/>
                         <outlet property="logoView" destination="LSo-T9-Xb4" id="cXR-O4-AsT"/>
                         <outlet property="metadataView" destination="tc7-gg-J9Q" id="WB5-T2-cfE"/>
+                        <outlet property="rightLoadingLogoView" destination="qi1-Vg-BzB" id="Lip-rq-BMK"/>
+                        <outlet property="rightLoadingMetadataView" destination="Ya6-kD-ZlD" id="VZ6-Ik-Sua"/>
+                        <outlet property="rightLoadingTitleView" destination="KcN-8I-ZcF" id="6i3-CR-3Y3"/>
+                        <outlet property="rightLoadingView" destination="h2Z-kk-yNx" id="ZCM-YE-cZn"/>
                         <outlet property="rightTipBackgroundView" destination="lmu-oY-WXX" id="4Rj-Tv-UWk"/>
                         <outlet property="rightTipView" destination="ud2-kt-bTu" id="KYF-2A-Il8"/>
                         <outlet property="titleView" destination="QXp-7V-G5W" id="Pdf-zv-dPr"/>
@@ -170,6 +220,7 @@
         <image name="left_tip_arrow" width="36" height="61"/>
         <image name="left_tip_bg" width="703" height="1080"/>
         <image name="loader-keyart-overlay" width="1920" height="1080"/>
+        <image name="logo_amc" width="107" height="60"/>
         <image name="right_tip_arrow" width="36" height="61"/>
         <image name="right_tip_bg" width="703" height="1080"/>
         <image name="videoloadingbar_loop_00000" width="1920" height="24"/>
