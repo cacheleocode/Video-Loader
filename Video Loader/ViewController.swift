@@ -30,6 +30,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var rightLoadingTitleView: UILabel!
     @IBOutlet weak var rightLoadingMetadataView: UILabel!
     
+    @IBOutlet weak var channelTrayView: UIImageView!
+    @IBOutlet weak var videoPlayerView: UIImageView!
+    
     // dispatch queue
     
     let queue = DispatchQueue(label: "queue", attributes: .concurrent)
@@ -61,6 +64,8 @@ class ViewController: UIViewController {
     // mode
     
     var surfing = false
+    
+    var audit = false
     
     // emulate lag
     
@@ -282,6 +287,12 @@ class ViewController: UIViewController {
         self.titleView.alpha = 0.0
         self.metadataView.alpha = 0.0
         self.loadingbarView.alpha = 0.0
+        
+        // channel tray
+        self.channelTrayView.alpha = 0
+        
+        // video player
+        self.videoPlayerView.alpha = 0
         
         // fake index
         self.fakeIndex = 0
@@ -511,12 +522,17 @@ class ViewController: UIViewController {
                 self.rightTipView.alpha = 0
 
             }, completion: { (finished: Bool) in
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
+                if (self.videoPlayerView.alpha == 0 && self.channelTrayView.alpha == 0) {
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
+                }
             })
         }
     }
     
     func doShow(direction: String, index: Int) {
+        // dismiss other UI
+        self.doChannelTray(mode: "hide")
+        
         self.randomDouble = self.getRandomDouble(lower: 0, upper: 4)
         debugPrint("logooooooo mess: \(String(describing: self.randomDouble))")
         
@@ -537,15 +553,15 @@ class ViewController: UIViewController {
         self.rightLoadingMetadataView.text = String(describing: self.channelMetadatas[self.fakeIndex])
         
         // destroy queued tasks
-        pendingTask?.cancel()
-        pendingTask2?.cancel()
+        self.pendingTask?.cancel()
+        self.pendingTask2?.cancel()
         
         // recreate tasks
-        pendingTask = DispatchWorkItem {
+        self.pendingTask = DispatchWorkItem {
             self.doTip(mode: "show")
         }
         
-        pendingTask2 = DispatchWorkItem {
+        self.pendingTask2 = DispatchWorkItem {
             self.doTip(mode: "hide")
         }
         
@@ -668,8 +684,8 @@ class ViewController: UIViewController {
                 self.playerLayer2?.isHidden = false
             }
         }
-        
-        // show tip
+    
+        // queue show tip
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
     }
 
@@ -692,8 +708,63 @@ class ViewController: UIViewController {
         }
     }
     
-    func doLogo() {
-        
+    func doChannelTray(mode: String) {
+        if (mode == "show") {
+            // hide tip
+            self.doTip(mode: "hide")
+            
+            // destroy queued tasks
+            self.pendingTask?.cancel()
+            self.pendingTask2?.cancel()
+            
+            // recreate tasks
+            self.pendingTask = DispatchWorkItem {
+                self.doTip(mode: "show")
+            }
+            
+            self.pendingTask2 = DispatchWorkItem {
+                self.doTip(mode: "hide")
+            }
+            
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.channelTrayView.alpha = 1
+            }, completion: nil)
+        } else if (mode == "hide") {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.channelTrayView.alpha = 0
+            }, completion: nil)
+        }
+    }
+    
+    func doVideoPlayer(mode: String) {
+        if (mode == "show") {
+            // hide channel tray
+            self.doChannelTray(mode: "hide")
+            
+            // hide tip
+            self.doTip(mode: "hide")
+            
+            // destroy queued tasks
+            self.pendingTask?.cancel()
+            self.pendingTask2?.cancel()
+            
+            // recreate tasks
+            self.pendingTask = DispatchWorkItem {
+                self.doTip(mode: "show")
+            }
+            
+            self.pendingTask2 = DispatchWorkItem {
+                self.doTip(mode: "hide")
+            }
+            
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.videoPlayerView.alpha = 1
+            }, completion: nil)
+        } else if (mode == "hide") {
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
+                self.videoPlayerView.alpha = 0
+            }, completion: nil)
+        }
     }
 
     
@@ -703,13 +774,24 @@ class ViewController: UIViewController {
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         if (presses.first?.type == UIPress.PressType.upArrow) {
-            // debugPrint("up arrow began")
+            if (self.surfing == false) {
+                self.doChannelTray(mode: "show")
             
-            self.lastDirection = "up"
+                self.lastDirection = "up"
+            }
         } else if(presses.first?.type == UIPress.PressType.downArrow) {
-            // debugPrint("down arrow began")
+            if (self.surfing == false) {
+                // debugPrint("down arrow began")
             
-            self.lastDirection = "down"
+                self.doChannelTray(mode: "hide")
+                
+                // queue show tip
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
+            
+                self.lastDirection = "down"
+            } else {
+                self.doToggleVersion()
+            }
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
             if (self.surfing == false) {
                 self.lastDirection = "left"
@@ -740,7 +822,28 @@ class ViewController: UIViewController {
                 }
             }
         } else if(presses.first?.type == UIPress.PressType.select) {
-            self.doToggleVersion()
+            if (self.surfing == false) {
+                if (self.videoPlayerView.alpha == 0) {
+                    self.doVideoPlayer(mode: "show")
+                } else {
+                    self.doVideoPlayer(mode: "hide")
+                    
+                    if (audit == false) {
+                        // queue show tip
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
+                    }
+                }
+            }
+        } else if(presses.first?.type == UIPress.PressType.menu) {
+            if (self.surfing == false) {
+                self.doChannelTray(mode: "hide")
+                self.doVideoPlayer(mode: "hide")
+                
+                if (audit == false) {
+                    // queue show tip
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
+                }
+            }
         }
     }
     

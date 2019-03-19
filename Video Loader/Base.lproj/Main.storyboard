@@ -27,6 +27,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Roku-VideoPlayer_Live" translatesAutoresizingMaskIntoConstraints="NO" id="LuY-KA-BXw">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Roku-ChannelTray-1" translatesAutoresizingMaskIntoConstraints="NO" id="lKI-Fp-zr5">
+                                <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_bg" translatesAutoresizingMaskIntoConstraints="NO" id="RJt-Rb-QpB">
                                 <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -125,6 +133,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="500" height="1080"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_amc" translatesAutoresizingMaskIntoConstraints="NO" id="6Eu-lC-1C2">
+                                        <rect key="frame" x="165" y="477" width="120" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Program Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U4e-RN-9Z5">
                                         <rect key="frame" x="100" y="572" width="250" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -139,12 +151,8 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="right_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="PbI-d6-uUK">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="right_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="PbI-d6-uUK">
                                         <rect key="frame" x="387" y="524" width="36" height="61"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_amc" translatesAutoresizingMaskIntoConstraints="NO" id="6Eu-lC-1C2">
-                                        <rect key="frame" x="165" y="477" width="120" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -171,7 +179,7 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Zly-hf-46x">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="left_tip_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Zly-hf-46x">
                                         <rect key="frame" x="53" y="524" width="36" height="61"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -190,6 +198,7 @@
                     </view>
                     <connections>
                         <outlet property="callsignView" destination="4Di-Qs-Ho0" id="GIL-6G-BB3"/>
+                        <outlet property="channelTrayView" destination="lKI-Fp-zr5" id="kTr-dd-VEU"/>
                         <outlet property="keyartView" destination="f9a-fS-nND" id="ekn-vU-yWU"/>
                         <outlet property="leftLoadingLogoView" destination="6Eu-lC-1C2" id="4ye-e2-CWS"/>
                         <outlet property="leftLoadingMetadataView" destination="AMQ-9d-YOw" id="o1S-cl-cRq"/>
@@ -209,6 +218,7 @@
                         <outlet property="rightTipView" destination="ud2-kt-bTu" id="KYF-2A-Il8"/>
                         <outlet property="titleView" destination="QXp-7V-G5W" id="Pdf-zv-dPr"/>
                         <outlet property="versionView" destination="i8l-NZ-Ndj" id="DZ2-7Z-bIx"/>
+                        <outlet property="videoPlayerView" destination="LuY-KA-BXw" id="Oi9-Kr-f0t"/>
                         <outlet property="videoView" destination="hK0-gf-McK" id="0MG-9Q-s5e"/>
                     </connections>
                 </viewController>
@@ -217,6 +227,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Roku-ChannelTray-1" width="1920" height="1080"/>
+        <image name="Roku-VideoPlayer_Live" width="1920" height="1080"/>
         <image name="left_tip_arrow" width="36" height="61"/>
         <image name="left_tip_bg" width="703" height="1080"/>
         <image name="loader-keyart-overlay" width="1920" height="1080"/>
