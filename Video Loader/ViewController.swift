@@ -420,6 +420,12 @@ class ViewController: UIViewController {
         playerLayer?.isHidden = false
         playerLayer?.player?.isMuted = false
         playerLayer?.player?.play()
+        
+        // recreate tasks
+        self.pendingTask = DispatchWorkItem {
+            self.doTip(mode: "show")
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(5000)), execute: self.pendingTask!)
      }
 
