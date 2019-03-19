@@ -794,9 +794,11 @@ class ViewController: UIViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         if (presses.first?.type == UIPress.PressType.upArrow) {
             if (self.surfing == false) {
-                self.doChannelTray(mode: "show")
+                if (self.channelTrayView.alpha == 0 && self.videoPlayerView.alpha == 0) {
+                    self.doChannelTray(mode: "show")
             
-                self.lastDirection = "up"
+                    self.lastDirection = "up"
+                }
             }
         } else if(presses.first?.type == UIPress.PressType.downArrow) {
             if (self.surfing == false) {
@@ -814,18 +816,20 @@ class ViewController: UIViewController {
             
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
             if (self.surfing == false) {
-                self.lastDirection = "left"
-                
-                debugPrint("fake index: \(String(describing: self.fakeIndex))")
-                
-                
-                if (self.fakeIndex == 0) {
-                    self.fakeIndex = 1
-                } else {
-                    self.fakeIndex = 0
+                if (self.videoPlayerView.alpha == 0 && self.channelTrayView.alpha == 0) {
+                    self.lastDirection = "left"
+                    
+                    debugPrint("fake index: \(String(describing: self.fakeIndex))")
+                    
+                    
+                    if (self.fakeIndex == 0) {
+                        self.fakeIndex = 1
+                    } else {
+                        self.fakeIndex = 0
+                    }
+                    
+                    doShow(direction: "left", index: self.fakeIndex)
                 }
-                
-                doShow(direction: "left", index: self.fakeIndex)
             }
         } else if(presses.first?.type == UIPress.PressType.rightArrow) {
             if (self.surfing == false) {
@@ -843,7 +847,7 @@ class ViewController: UIViewController {
             }
         } else if(presses.first?.type == UIPress.PressType.select) {
             if (self.surfing == false) {
-                if (self.videoPlayerView.alpha == 0) {
+                if (self.channelTrayView.alpha == 0 && self.videoPlayerView.alpha == 0) {
                     self.doVideoPlayer(mode: "show")
                 } else {
                     self.doVideoPlayer(mode: "hide")
