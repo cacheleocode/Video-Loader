@@ -158,7 +158,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        self.version = "Version A"
+        self.version = "Version C"
         
         self.lastDirection = "up"
 
@@ -227,7 +227,7 @@ class ViewController: UIViewController {
         
         // initial appearance
         
-        self.versionView.text = "full, left"
+        self.versionView.text = "partial, left"
         self.versionView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / -4)
         self.versionView.layer.position = CGPoint(x: 150, y: 150)
         
@@ -261,11 +261,13 @@ class ViewController: UIViewController {
         
         // tip
         self.leftTipBackgroundView.alpha = 0
-        self.leftTipView.frame.origin.x = 90
+        // self.leftTipView.frame.origin.x = 90
+        self.leftTipView.frame.origin.x = 0
         self.leftTipView.alpha = 0
 
         self.rightTipBackgroundView.alpha = 0
-        self.rightTipView.frame.origin.x = -90
+        // self.rightTipView.frame.origin.x = -90
+        self.rightTipView.frame.origin.x = 0
         self.rightTipView.alpha = 0
 
         // partial loading views
@@ -494,21 +496,21 @@ class ViewController: UIViewController {
         if (mode == "show") {
             self.leftTipBackgroundView.alpha = 0
             self.leftTipView.alpha = 0
-            self.leftTipView.frame.origin.x = 90
+            // self.leftTipView.frame.origin.x = 90
             
             self.rightTipBackgroundView.alpha = 0
             self.rightTipView.alpha = 0
-            self.rightTipView.frame.origin.x = -90
+            // self.rightTipView.frame.origin.x = -90
             
             UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.leftTipBackgroundView.alpha = 1
                 self.leftTipView.alpha = 1
-                self.leftTipView.frame.origin.x = 0
+                // self.leftTipView.frame.origin.x = 0
                 
                 if (self.version == "Version B" || self.version == "Version D") {
                     self.rightTipBackgroundView.alpha = 1
                     self.rightTipView.alpha = 1
-                    self.rightTipView.frame.origin.x = 0
+                    // self.rightTipView.frame.origin.x = 0
                 }
             }, completion: { (finished: Bool) in
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask2!)
@@ -578,6 +580,8 @@ class ViewController: UIViewController {
         }
         
         if (self.version == "Version A" || self.version == "Version B") {
+            self.surfing = true
+            
             self.callsignView.alpha = 0.0
             self.keyartView.alpha = 0.0
             self.titleView.alpha = 0.0
@@ -644,6 +648,8 @@ class ViewController: UIViewController {
 
     func doHide() {
         if (self.version == "Version A" || self.version == "Version B") {
+            self.surfing = false
+            
             UIView.animate(withDuration: 0.3, delay: 0.0, options: [.curveEaseOut], animations: {
                 self.keyartView.alpha = 1.0
             }, completion: { (finished: Bool) in
@@ -692,6 +698,18 @@ class ViewController: UIViewController {
     func doToggleVersion () {
         switch (self.version) {
             case "Version A":
+                self.version = "Version C"
+                self.versionView.text = "partial, left"
+            case "Version C":
+                self.version = "Version A"
+                self.versionView.text = "full, left"
+            default:
+                self.versionView.text = self.version
+        }
+        
+        /*
+        switch (self.version) {
+            case "Version A":
                 self.version = "Version B"
                 self.versionView.text = "full, both"
             case "Version B":
@@ -706,6 +724,7 @@ class ViewController: UIViewController {
             default:
                 self.versionView.text = self.version
         }
+        */
     }
     
     func doChannelTray(mode: String) {
@@ -789,9 +808,10 @@ class ViewController: UIViewController {
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(Int(6000)), execute: self.pendingTask!)
             
                 self.lastDirection = "down"
-            } else {
-                self.doToggleVersion()
             }
+            
+            debugPrint("last direction: \(String(describing: self.lastDirection))")
+            
         } else if(presses.first?.type == UIPress.PressType.leftArrow) {
             if (self.surfing == false) {
                 self.lastDirection = "left"
@@ -836,6 +856,10 @@ class ViewController: UIViewController {
             }
         } else if(presses.first?.type == UIPress.PressType.menu) {
             if (self.surfing == false) {
+                if (self.videoPlayerView.alpha == 0 && self.channelTrayView.alpha == 0) {
+                    self.doToggleVersion()
+                }
+                
                 self.doChannelTray(mode: "hide")
                 self.doVideoPlayer(mode: "hide")
                 
